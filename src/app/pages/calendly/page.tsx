@@ -104,7 +104,7 @@ export default function CalendlyFast() {
 								Te <strong>garantizamos</strong> que te vas con ideas claras de cómo bajar de peso de un experto certificado.
 							</p>
 							<div className="mt-8 hidden md:block">
-								<img className="h-[40px]" src="/images/reviews-nano.png" alt="Nano Ponce Fitness" />
+								<img className="h-[40px]" src="/images/reviews-nano.png" alt="Manu Nunez Fitness" />
 							</div>
 						</div>
 
@@ -137,7 +137,7 @@ export default function CalendlyFast() {
 						<p>En caso de no encontrar horarios disponibles escribime por WhatsApp al <a className="underline text-blue-500" href="https://wa.me/5492216720769">+54 9 11 3685-7548</a></p>
 
 						<div className="mt-8 md:hidden block mx-auto">
-							<img className="h-[40px]" src="/images/reviews-nano.png" alt="Nano Ponce Fitness" />
+							<img className="h-[40px]" src="/images/reviews-nano.png" alt="Manu Nunez Fitness" />
 						</div>
 					</div>
 				</div>

@@ -121,8 +121,8 @@ export default function ThankYou() {
       "BEGIN:VCARD",
       "VERSION:3.0",
       "N:Ponce;Nano;;;",
-      "FN:Nano Ponce",
-      "ORG:Nano Ponce Fit",
+      "FN:Manu Nunez",
+      "ORG:Manu Nunez Fit",
       "TITLE:Coach",
       `TEL;TYPE=CELL:+${waNumber}`,
       "END:VCARD"
