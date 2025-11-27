@@ -355,7 +355,7 @@ export default function CalificationFormDirect({ variant }: Props) {
         });
       }
 
-      if (isQualified) {
+      if (data.presupuesto === 'presupuesto-intermedio' || data.presupuesto === 'presupuesto-alto') {
         window.location.href = '/pages/calendly';
       } else {
         window.location.href = '/pages/nothing-for-you-now';

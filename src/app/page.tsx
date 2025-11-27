@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsUnlocked(true);
-    }, 5 * 60 * 1000); // 5 minutos
+    }, 0.5 * 60 * 1000); // 5 minutos
 
     return () => clearTimeout(timer);
   }, []);
@@ -36,19 +36,19 @@ export default function Home() {
 
   const TESTIMONIALS = [
     {
-      weight: "-5kg en 3 meses",
+      weight: "-6kg en 3 meses",
       img: "/images/testimonios/testimonio-1.png",
     },
     {
-      weight: "-5kg en 3 meses",
+      weight: "-10kg en 3 meses",
       img: "/images/testimonios/testimonio-2.png",
     },
     {
-      weight: "-5kg en 3 meses",
+      weight: "-8kg en 3 meses",
       img: "/images/testimonios/testimonio-3.png",
     },
     {
-      weight: "-5kg en 3 meses",
+      weight: "-8kg en 3 meses",
       img: "/images/testimonios/testimonio-4.png",
     },
   ];
@@ -90,14 +90,14 @@ export default function Home() {
           </h1>
           <section className="relative">
             <div className="bg-[#0051ff] border-4 overflow-clip rounded-[12px] md:rounded-[16px] border-[#0051ff] mt-6 max-w-[750px] mx-auto">
-              <div className="p-1 md:p-2 text-center text-[14px] text-black font-bold bg-[#0051ff]">
+              <div className="p-1 md:p-2 text-center text-[14px] text-white font-bold bg-[#0051ff]">
                 <span>PASO 1 de 2:</span> MIRÁ EL VIDEO COMPLETO
               </div>
               <div className="bg-[#0051ff] aspect-video rounded-[8px] md:rounded-[12px] overflow-clip">
                 <iframe
                   className="w-full aspect-video"
-                  id="panda-f3e4e036-787b-4690-b86e-4fbac6bdd47f"
-                  src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=f3e4e036-787b-4690-b86e-4fbac6bdd47f"
+                  id="panda-069e112f-6e84-4b51-819b-379c77bc03b5"
+                  src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5" 
                   allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
                 ></iframe>
               </div>
@@ -129,7 +129,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 🔒 TODO LO DE ABAJO SOLO SE VE DESPUÉS DE 5 MINUTOS */}
+      {/* 🔒 TODO LO DE ABAJO SOLO SE VE DESPUÉS DE 5 MINUTOS
       {isUnlocked && (
         <>
           <section className="py-[40px] relative z-20">
@@ -145,7 +145,7 @@ export default function Home() {
                       className="p-2 rounded-[24px] relative overflow-clip"
                     >
                       <div className="bg-[#0051ff] size-[600px] md:size-[700px] top-0 md:-top-[100px] blur-[100px] opacity-[70%] rounded-full absolute left-[calc(50%-300px)] md:left-[calc(50%-350px)] -z-50"></div>
-                      <div className="relative bg-[#0051ff] z-50 p-8 md:p-[50px] rounded-[20px] flex md:flex-row flex-col gap-4 md:gap-8">
+                      <div className="relative bg-[#00091e] z-50 p-8 md:p-[50px] rounded-[20px] flex md:flex-row flex-col gap-4 md:gap-8">
                         <div className="w-full md:min-w-[360px] aspect-video rounded-[10px] overflow-hidden">
                           <iframe
                             className="w-full h-full"
@@ -189,7 +189,7 @@ export default function Home() {
             </div>
           </section>
         </>
-      )}
+      )} */}
 
       <section className="py-[60px] md:py-[80px] relative overflow-clip">
         <div className="cf-container">
@@ -249,7 +249,7 @@ export default function Home() {
       </section>
 
       <p className="pb-6 pt-8 text-[14px] text-center px-4 text-white/60">
-        © Nano Fitness 2025. Todos los derechos reservados.
+        © Manu Nuñez 2025. Todos los derechos reservados.
       </p>
     </div>
   );

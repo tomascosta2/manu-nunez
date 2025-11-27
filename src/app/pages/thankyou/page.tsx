@@ -96,9 +96,9 @@ export default function ThankYou() {
   }, [startAt]);
 
   // WhatsApp confirm
-  const waNumber = "5492216720769"; // <-- REEMPLAZAR
+  const waNumber = "5492216720769"; 
   const confirmMsg = encodeURIComponent(
-    `Hola Nano${name ? `, soy ${name}` : ""}. Confirmo mi asistencia a la reunión ${startAt ? `del ${new Date(startAt).toLocaleString()}` : ""}.`
+    `Hola Manu ${name ? `, soy ${name}` : ""}. Confirmo mi asistencia a la reunión ${startAt ? `del ${new Date(startAt).toLocaleString()}` : ""}.`
   );
   const waConfirmHref = `https://wa.me/${waNumber}?text=${confirmMsg}`;
 
@@ -120,7 +120,7 @@ export default function ThankYou() {
     const v = [
       "BEGIN:VCARD",
       "VERSION:3.0",
-      "N:Ponce;Nano;;;",
+      "N:Nunez;Manu;;;",
       "FN:Manu Nunez",
       "ORG:Manu Nunez Fit",
       "TITLE:Coach",
