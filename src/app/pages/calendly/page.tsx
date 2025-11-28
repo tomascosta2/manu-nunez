@@ -64,7 +64,7 @@ export default function CalendlyFast() {
 
 	// Construir la URL de Calendly sin widget.js
 	const calendlyUrl = useMemo(() => {
-		const base = "https://calendly.com/marianoponce2002/60min";
+		const base = "https://calendly.com/sarlomanuel33/30min?&hide_gdpr_banner=1%22";
 		const params = new URLSearchParams({
 			hide_gdpr_banner: "1",
 			embed_type: "InlineWidget",
@@ -134,7 +134,7 @@ export default function CalendlyFast() {
 							/>
 						</div>
 
-						<p>En caso de no encontrar horarios disponibles escribime por WhatsApp al <a className="underline text-blue-500" href="https://wa.me/5492216720769">+54 9 11 3685-7548</a></p>
+						<p>En caso de no encontrar horarios disponibles escribime por WhatsApp al <a className="underline text-blue-500" href="https://wa.me/5492216720769">+54 9 2216720769</a></p>
 
 						<div className="mt-8 md:hidden block mx-auto">
 							<img className="h-[40px]" src="/images/reviews-nano.png" alt="Manu Nunez Fitness" />

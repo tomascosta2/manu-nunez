@@ -38,7 +38,7 @@ export default function ThankYou() {
   }, [startAt]);
 
   // Calendario: helpers
-  const title = "Reunión con el equipo de Nano – Plan para recomponer hormonas y músculo";
+  const title = "Reunión con el equipo de Manu – Plan para recomponer hormonas y músculo";
   const description = `Reunión 1:1 para alinear objetivos y plan.\nEnlace: MEETING_URL\nTraer dudas y objetivos claros.`;
   const location = "Online (se compartirá enlace)";
   const gcalHref = useMemo(() => {
@@ -139,7 +139,10 @@ export default function ThankYou() {
           <span><strong>¡Último paso!</strong> Confirmá y agendá para no perder tu cupo.</span>
         </p>
 
-        <iframe className="w-full aspect-video my-4" id="panda-4f47185b-9860-47d9-b95b-ada5b45addcf" src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=4f47185b-9860-47d9-b95b-ada5b45addcf" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"></iframe>
+        <iframe className="w-full aspect-video my-4"  
+        id="panda-1de861f0-5f8b-45d4-ba82-18bd332f961a" 
+        src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=1de861f0-5f8b-45d4-ba82-18bd332f961a"  
+        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"></iframe>
 
         {/* Título + countdown */}
         <h1 className="text-[26px] text-black font-bold leading-[115%] mb-2">
@@ -220,12 +223,12 @@ export default function ThankYou() {
         {/* Social proof compacto arriba del fold */}
         <div className="grid md:grid-cols-3 gap-4 mt-8">
           {[
-            { txt: "-17 KG en 3 Meses", img: "/images/testimonios/testimonio-1.webp" },
-            { txt: "-4 KG en 1 Mes", img: "/images/testimonios/testimonio-3.webp" },
-            { txt: "-5,5 KG en 1 Meses", img: "/images/testimonios/testimonio-5.webp" },
+            { txt: "-10 KG en 3 Meses", img: "/images/testimonios/testimonio-2.png" },
+            { txt: "-8 KG en 3 Meses", img: "/images/testimonios/testimonio-3.png" },
+            { txt: "-8 KG en 3 Meses", img: "/images/testimonios/testimonio-4.png" },
           ].map((t, i) => (
             <div key={i}>
-              <p className="text-center py-2 bg-[#0051ff] text-black font-semibold">{t.txt}</p>
+              <p className="text-center py-2 bg-[#0051ff] text-white font-semibold">{t.txt}</p>
               <img className="w-full h-[260px] object-cover" src={t.img} alt={`Cambio ${i+1}`} />
             </div>
           ))}
