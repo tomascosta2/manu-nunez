@@ -21,9 +21,8 @@ export default function CalendlyFast() {
 
 			if (e.data?.event === "calendly.event_scheduled") {
 
-				// https://hook.us2.make.com/2a7gkby3xtgo4annvy16nbu74laekhem
-
-				fetch('https://hook.us2.make.com/2a7gkby3xtgo4annvy16nbu74laekhem', {
+				// fetch('https://n8n.srv953925.hstgr.cloud/webhook-test/2db9bfb5-0323-4d9e-aa37-dfded650a180', {
+				fetch('https://n8n.srv953925.hstgr.cloud/webhook/2db9bfb5-0323-4d9e-aa37-dfded650a180', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
@@ -93,7 +92,7 @@ export default function CalendlyFast() {
 						{/* Columna de textos (igual que la tuya) */}
 						<div className="md:-order-1 order-2">
 							<h2 className="text-[20px] sm:text-[28px] font-bold leading-[120%] mb-6 sm:mb-8 text-white">
-								Nuestros clientes bajan entre 6 y 15 kg de grasa corporal en 3 meses. <span className="underline">Vos también podés</span>. Agenda una llamada y vamos a hablar de:
+								Nuestros clientes bajan entre 8 y 12 kg de grasa corporal y ganan musculo en 3 meses. <span className="underline">Vos también podés</span>. Agenda una llamada y vamos a hablar de:
 							</h2>
 							<ul className="mb-8 text-[18px]">
 								<li>✅ Cómo bajar de peso sin dietas extremas ni rutinas imposibles</li>
@@ -136,9 +135,9 @@ export default function CalendlyFast() {
 
 						<p>En caso de no encontrar horarios disponibles escribime por WhatsApp al <a className="underline text-blue-500" href="https://wa.me/5492216720769">+54 9 2216720769</a></p>
 
-						<div className="mt-8 md:hidden block mx-auto">
+						{/* <div className="mt-8 md:hidden block mx-auto">
 							<img className="h-[40px]" src="/images/reviews-nano.png" alt="Manu Nunez Fitness" />
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</section>

@@ -158,11 +158,11 @@ export default function CalificationFormDirect({ variant }: Props) {
         subtitle:
           'Esto nos ayuda a adaptar tu alimentación y entrenamiento a tu estilo de vida.',
         options: [
-          { value: 'negocio-propio', label: 'Tengo mi propio negocio' },
+          { value: 'negocio-propio', label: 'Tengo mi propio negocio con empleados' },
           { value: 'profesional', label: 'Soy profesional (Abogado, Médico, etc.)' },
-          { value: 'trabajador', label: 'Trabajador' },
-          { value: 'estudiante', label: 'Estudiante' },
-          { value: 'trabajador-estudiante', label: 'Trabajador y Estudiante' },
+          { value: 'freelance', label: 'Freelance / Home office' },
+          { value: 'trabajador', label: 'Trabajo manual / fisico' },
+          { value: 'otro', label: 'Otro' },
         ],
       },
       {
@@ -308,7 +308,20 @@ export default function CalificationFormDirect({ variant }: Props) {
     try {
       setLoading(true);
 
-      await fetch('https://hook.us2.make.com/4440nxy5471reiw1q18qotjc15rveijb', {
+      console.log(data)
+
+      // test
+      try {
+        const result = await fetch('https://n8n.srv953925.hstgr.cloud/webhook-test/6f46fb81-91f5-4ffe-8b1c-783d8f3ea581', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify([{ ...data, variant }]),
+        });
+        console.log(result)
+      } catch {}
+
+      // production
+      await fetch('https://n8n.srv953925.hstgr.cloud/webhook/6f46fb81-91f5-4ffe-8b1c-783d8f3ea581', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify([{ ...data, variant }]),
@@ -317,8 +330,8 @@ export default function CalificationFormDirect({ variant }: Props) {
       const isQualified =
         (data.presupuesto === 'presupuesto-intermedio' || data.presupuesto === 'presupuesto-alto') &&
         (data.edad === 'adulto' || data.edad === 'mayor') &&
-        (data.urgencia === '7' || data.urgencia === '10') &&
-        (data.ocupacion === 'negocio-propio' || data.ocupacion === 'profesional' );
+        (data.urgencia === '5' || data.urgencia === '7' || data.urgencia === '10') &&
+        (data.ocupacion === 'negocio-propio' || data.ocupacion === 'profesional' || data.ocupacion === 'freelance' );
 
       localStorage.setItem('isQualified', isQualified ? 'true' : 'false');
       localStorage.setItem('name', data.name);

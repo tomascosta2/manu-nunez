@@ -1,7 +1,6 @@
 "use client";
 import Script from "next/script";
 import { useRef, useState, useEffect } from "react";
-import CalificationForm from "./components/CalificationForm";
 import CalificationFormDirect from "./components/CalificationFormDirect";
 
 export default function Home() {
@@ -25,12 +24,12 @@ export default function Home() {
   const VIDEO_TESTIMONIALS = [
     {
       video:
-        "https://fast.wistia.net/embed/iframe/eowyh45vlt?web_component=true&seo=true",
-      titulo: "Mateo bajo 17 KG en SOLO 3 meses",
+        "url",
+      titulo: "titulo",
       story:
-        "Antes me miraba de reojo y me veía espantoso... Son 90 días que me cambiaron la vida. Es un cambio gigante no solo para mi cuerpo, sino también para mi mentalidad.",
-      nombre: "Mateo Falco",
-      dato: "Buenos Aires, Argentina",
+        "Backstory",
+      nombre: "Nombre",
+      dato: "Provincia, Pais",
     },
   ];
 
@@ -60,17 +59,10 @@ export default function Home() {
       <header className="bg-[#0051ff] max-w-[85%] w-[400px] rounded-full mt-8 md:mt-12 mx-auto">
         <div className="cf-container">
           <h3 className="text-center text-[#f5f5f5] text-[14px] py-3 font-bold leading-[115%]">
-            {variant === "A" && (
-              <span>
-                Te exigis, te castigas, lo das todo… y aún así ¿no te reconoces
-                frente al espejo?
-              </span>
-            )}
-            {variant === "B" && (
-              <span>
-                ¿Tenes un buen trabajo pero te has dejado estar con tu fisico?
-              </span>
-            )}
+            <span>
+              Te exigis, te castigas, lo das todo… y aún así ¿no te reconoces
+              frente al espejo?
+            </span>
           </h3>
         </div>
       </header>
@@ -82,9 +74,9 @@ export default function Home() {
             <span>
               BAJÁ ENTRE{" "}
               <span className="text-[#0051ff]">
-                6 Y 15 KG DE GRASA CORPORAL Y TONIFICÁ EN 90 DÍAS
+                8 Y 12 KG DE GRASA CORPORAL Y TONIFICÁ EN 90 DÍAS
               </span>{" "}
-              CON MI <span className="text-[#0051ff]">MÉTODO FIT90</span> - SIN
+              CON MI <span className="text-[#0051ff]">MÉTODO [Nombre]</span> - SIN
               DIETAS EXTREMAS NI RUTINAS IMPOSIBLES
             </span>
           </h1>
@@ -203,12 +195,12 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-4 mt-8">
             {TESTIMONIALS.map((t, i) => (
-              <div className="rounded  overflow-hidden">
+              <div className="rounded-[14px] bg-[#0051ff] p-1 overflow-hidden">
                 <p className="text-center py-2 bg-[#0051ff] text-[#f5f5f5] font-semibold">
                   {t.weight}
                 </p>
                 <img
-                  className="w-full h-[290px] max-h-full object-cover"
+                  className="w-full rounded-[10px] h-[290px] max-h-full object-cover"
                   src={`${t.img}`}
                   alt={`${ALT_IMG_GENERIC} cambio ${i + 1}`}
                 />
