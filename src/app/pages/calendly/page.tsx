@@ -103,7 +103,7 @@ export default function CalendlyFast() {
 								Te <strong>garantizamos</strong> que te vas con ideas claras de cómo bajar de peso de un experto certificado.
 							</p>
 							<div className="mt-8 hidden md:block">
-								<img className="h-[40px]" src="/images/reviews-nano.png" alt="Manu Nunez Fitness" />
+								{/* <img className="h-[40px]" src="/images/reviews-nano.png" alt="Manu Nunez Fitness" /> */}
 							</div>
 						</div>
 

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   const hashPhone = await hashSHA256(data.phone);
 
   // Enviamos los leads calificados mediante la API
-  await fetch(
+  const response = await fetch(
     `https://graph.facebook.com/v18.0/1391736115664543/events?access_token=${process.env.API_ACCESS_TOKEN}`,
     {
       method: 'POST',
@@ -38,12 +38,13 @@ export async function POST(req: Request) {
             },
           },
         ],
+        test_event_code: 'TEST93400'
       }),
     }
   );
 
-  // const result = await response.json();
-  // console.log("RESPONSE FROM META:", result);
+  const result = await response.json();
+  console.log("RESPONSE FROM META:", result);
 
   return NextResponse.json({ success: true });
 }
