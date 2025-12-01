@@ -3,8 +3,8 @@ import "./globals.css";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Manu Nuñez Fit - Baja entre 5 y 15 kilogramos de grasa con mi metodo FIT90 para adultos ocupados",
-  description: "Manu Nuñez Fit - Baja entre 5 y 15 kilogramos de grasa con mi metodo FIT90 para adultos ocupados",
+  title: "Manu Nuñez Fit - Baja entre 5 y 15 kilogramos de grasa con mi metodo para adultos ocupados",
+  description: "Manu Nuñez Fit - Baja entre 5 y 15 kilogramos de grasa con mi metodo para adultos ocupados",
 };
 
 export default function RootLayout({

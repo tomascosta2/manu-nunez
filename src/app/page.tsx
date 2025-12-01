@@ -73,10 +73,10 @@ export default function Home() {
           <h1 className="text-center text-[20px] md:text-[32px] font-bold leading-[120%]">
             <span>
               BAJÁ ENTRE{" "}
-              <span className="text-[#0051ff]">
+              <span className="bg-[#0051ff]">
                 8 Y 12 KG DE GRASA CORPORAL Y TONIFICÁ EN 90 DÍAS
               </span>{" "}
-              CON MI <span className="text-[#0051ff]">MÉTODO [Nombre]</span> - SIN
+              CON MI <span className="bg-[#0051ff]">MÉTODO PARA HOMBRES OCUPADOS</span> - SIN
               DIETAS EXTREMAS NI RUTINAS IMPOSIBLES
             </span>
           </h1>
@@ -193,9 +193,9 @@ export default function Home() {
             pensado específicamente para vos.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
+          <div className="flex flex-wrap justify-center gap-4 mt-8">
             {TESTIMONIALS.map((t, i) => (
-              <div className="rounded-[14px] bg-[#0051ff] p-1 overflow-hidden">
+              <div className="rounded-[14px] w-full md:w-[32%] bg-[#0051ff] p-1 overflow-hidden">
                 <p className="text-center py-2 bg-[#0051ff] text-[#f5f5f5] font-semibold">
                   {t.weight}
                 </p>
@@ -206,7 +206,7 @@ export default function Home() {
                 />
               </div>
             ))}
-            <div className="h-[290px] overflow-clip relative">
+            <div className="h-full w-full md:w-[32%] min-h-[338px] overflow-clip relative border-4 border-[#0051ff] p-1 rounded-[14px]">
               <div className="absolute flex items-center justify-center w-full h-full bg-black/90">
                 <p className="text-white text-center px-8 font-semibold">
                   +20 cambios como estos
@@ -214,7 +214,7 @@ export default function Home() {
                   (Mirá el video completo y agendá tu sesión de diagnóstico)
                 </p>
               </div>
-              <img className="w-full h-[290px] max-h-full object-cover" src="/images/testimonios/testimonio-1.png" alt={`${ALT_IMG_GENERIC}`} />
+              <img className="w-full h-full object-cover min-h-[338px]" src="/images/testimonios/testimonio-1.png" alt={`${ALT_IMG_GENERIC}`} />
             </div>
           </div>
           {/* Botón bloqueado 5 minutos */}
