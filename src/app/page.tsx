@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsUnlocked(true);
-    }, 5 * 60 * 1000); // 5 minutos
+    }, 4 * 60 * 1000); // 4 minutos
 
     return () => clearTimeout(timer);
   }, []);

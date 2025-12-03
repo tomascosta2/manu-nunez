@@ -104,13 +104,13 @@ export default function ThankYou() {
 
   // Pixel (opcional): enviar evento custom al hacer click en Confirmar
   const trackConfirm = () => {
-    try {
-      // @ts-ignore
-      window.fbq?.("trackCustom", "ConfirmedAttendance", {
-        startAt,
-        name
-      });
-    } catch {}
+    // try {
+    //   // @ts-ignore
+    //   window.fbq?.("trackCustom", "ConfirmedAttendance", {
+    //     startAt,
+    //     name
+    //   });
+    // } catch {}
   };
 
   const confirmEnabled = agreeQuietPlace && agreeOnTime && agreeNoReschedule;
