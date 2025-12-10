@@ -73,10 +73,10 @@ export default function Home() {
           <h1 className="text-center text-[20px] md:text-[32px] font-bold leading-[120%]">
             <span>
               BAJÁ ENTRE{" "}
-              <span className="bg-[#0051ff]">
+              <span>
                 8 Y 12 KG DE GRASA CORPORAL Y TONIFICÁ EN 90 DÍAS
               </span>{" "}
-              CON MI <span className="bg-[#0051ff]">MÉTODO PARA HOMBRES OCUPADOS</span> - SIN
+              CON MI <span>MÉTODO PARA HOMBRES OCUPADOS</span> - SIN
               DIETAS EXTREMAS NI RUTINAS IMPOSIBLES
             </span>
           </h1>
