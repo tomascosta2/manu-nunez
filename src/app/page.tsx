@@ -114,7 +114,7 @@ export default function Home() {
             </button>
             <p className="text-center mt-4 text-white/60 italic mx-auto max-w-[350px] text-[14px]">
               {isUnlocked
-                ? "Cupos limitados - No te lo pierdas!"
+                ? "Este programa no es para todos. Solo trabajamos con 8 alumnos por mes. Si tu objetivo es lograr un resultado real, aplicá arriba."
                 : "⚠️ El botón se habilitará luego de ver el video."}
             </p>
           </div>
