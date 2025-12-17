@@ -71,14 +71,17 @@ export default function Home() {
       <section className="mt-6 md:mt-8 pb-[60px] md:pb-[80px]">
         <div className="cf-container">
           <h1 className="text-center text-[20px] md:text-[32px] font-bold leading-[120%]">
-            <span>
-              BAJÁ ENTRE{" "}
+            {variant === 'A' && (
               <span>
-                8 Y 12 KG DE GRASA CORPORAL Y TONIFICÁ EN 90 DÍAS
-              </span>{" "}
-              CON MI <span>MÉTODO PARA HOMBRES OCUPADOS</span> - SIN
-              DIETAS EXTREMAS NI RUTINAS IMPOSIBLES
-            </span>
+                Bajá entre <span>6 y 15 kg de grasa corporal y tonificá en 90 días</span> con mi <span>Protocolo M90</span> - sin dietas extremas ni rutinas imposibles
+              </span>
+            )}
+
+            {variant === 'B' && (
+              <span>
+                Bajá entre <span>6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días</span> con mi <span>Protocolo M90</span> - sin dietas extremas ni rutinas imposibles
+              </span>
+            )}
           </h1>
           <section className="relative">
             <div className="bg-[#0051ff] border-4 overflow-clip rounded-[12px] md:rounded-[16px] border-[#0051ff] mt-6 max-w-[750px] mx-auto">
