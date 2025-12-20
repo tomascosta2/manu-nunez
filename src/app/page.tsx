@@ -71,17 +71,9 @@ export default function Home() {
       <section className="mt-6 md:mt-8 pb-[60px] md:pb-[80px]">
         <div className="cf-container">
           <h1 className="text-center text-[20px] md:text-[32px] font-bold leading-[120%]">
-            {variant === 'A' && (
-              <span>
-                Bajá entre <span>6 y 15 kg de grasa corporal y tonificá en 90 días</span> con mi <span>Protocolo M90</span> - sin dietas extremas ni rutinas imposibles
-              </span>
-            )}
-
-            {variant === 'B' && (
-              <span>
-                Bajá entre <span>6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días</span> con mi <span>Protocolo M90</span> - sin dietas extremas ni rutinas imposibles
-              </span>
-            )}
+            <span>
+              Bajá entre <span>6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días</span> con mi <span>Protocolo M90</span> - sin dietas extremas ni rutinas imposibles
+            </span>
           </h1>
           <section className="relative">
             <div className="bg-[#0051ff] border-4 overflow-clip rounded-[12px] md:rounded-[16px] border-[#0051ff] mt-6 max-w-[750px] mx-auto">
@@ -89,12 +81,22 @@ export default function Home() {
                 <span>PASO 1 de 2:</span> MIRÁ EL VIDEO COMPLETO
               </div>
               <div className="bg-[#0051ff] aspect-video rounded-[8px] md:rounded-[12px] overflow-clip">
-                <iframe
-                  className="w-full aspect-video"
-                  id="panda-069e112f-6e84-4b51-819b-379c77bc03b5"
-                  src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5" 
-                  allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-                ></iframe>
+                {variant === 'A' && (
+                  <iframe
+                    className="w-full aspect-video"
+                    id="panda-069e112f-6e84-4b51-819b-379c77bc03b5"
+                    src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5"
+                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+                  ></iframe>
+                )}
+                {variant === 'B' && (
+                  <iframe
+                    className="w-full aspect-video"
+                    id="panda-fa61a8fa-18e7-4aa7-83ba-00afa029c02e"
+                    src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=fa61a8fa-18e7-4aa7-83ba-00afa029c02e"
+                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+                  ></iframe>
+                )}
               </div>
             </div>
           </section>
@@ -213,7 +215,7 @@ export default function Home() {
               <div className="absolute flex items-center justify-center w-full h-full bg-black/90">
                 <p className="text-white text-center px-8 font-semibold">
                   +20 cambios como estos
-                  <br/>
+                  <br />
                   (Mirá el video completo y agendá tu sesión de diagnóstico)
                 </p>
               </div>
