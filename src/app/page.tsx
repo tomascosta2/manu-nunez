@@ -56,12 +56,11 @@ export default function Home() {
   return (
     <div>
       {isFormOpened && <CalificationFormDirect variant={variant} />}
-      <header className="bg-[#0051ff] max-w-[85%] w-[400px] rounded-full mt-8 md:mt-12 mx-auto">
+      <header className="border border-[#0051ff] bg-[#0051ff]/20 max-w-[85%] w-[400px] rounded-full mt-8 md:mt-12 mx-auto">
         <div className="cf-container">
           <h3 className="text-center text-[#f5f5f5] text-[14px] py-3 font-bold leading-[115%]">
             <span>
-              Te exigis, te castigas, lo das todo… y aún así ¿no te reconoces
-              frente al espejo?
+              Exclusivo para profesionales mayores de 35
             </span>
           </h3>
         </div>
