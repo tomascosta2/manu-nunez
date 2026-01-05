@@ -17,8 +17,10 @@ type FormValues = {
   urgencia: string;
   ocupacion: string;
   compromiso90: string;
+  objetivo: string;
   ad: string;
 };
+
 
 // IDs válidos de preguntas de opción única
 type SingleId = Extract<
@@ -39,6 +41,15 @@ type SingleStep = {
   title: string;
   subtitle?: string;
   options: Opcion[];
+  required?: boolean;
+};
+
+type TextStep = {
+  type: 'text';
+  id: 'objetivo';
+  title: string;
+  subtitle?: string;
+  placeholder?: string;
   required?: boolean;
 };
 
@@ -93,7 +104,7 @@ export default function CalificationFormDirect({ variant }: Props) {
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const steps = useMemo<(ContactStep | SingleStep)[]>(
+  const steps = useMemo<(ContactStep | SingleStep | TextStep)[]>(
     () => [
       {
         type: 'contact',
@@ -188,6 +199,17 @@ export default function CalificationFormDirect({ variant }: Props) {
         ],
       },
       {
+        type: 'text',
+        id: 'objetivo',
+        required: true,
+        title:
+          '¿Cuál es tu objetivo de salud/calidad de vida y cómo querés sentirte en los próximos meses?*',
+        subtitle:
+          'Cuanto más nos cuentes, mejor vamos a poder ayudarte.',
+        placeholder:
+          'Ej: Tener más energía, dejar de cansarme, sentirme bien con mi cuerpo, mejorar mi salud...',
+      },
+      {
         type: 'single',
         id: 'presupuesto',
         required: true,
@@ -233,13 +255,20 @@ export default function CalificationFormDirect({ variant }: Props) {
     return isNameValid && isEmailValid && isPhoneValid;
   };
 
-  const canAdvanceFromStep = (s: ContactStep | SingleStep) => {
+  const canAdvanceFromStep = (s: ContactStep | SingleStep | TextStep) => {
     if (s.type === 'contact') return isContactValid();
+
     if (s.type === 'single' && s.required === true) {
-      return !!values[s.id]; // valor seleccionado
+      return !!values[s.id];
     }
+
+    if (s.type === 'text' && s.required === true) {
+      return (values.objetivo ?? '').trim().length > 10;
+    }
+
     return true;
   };
+
 
   const back = () => setStepIndex((i) => Math.max(0, i - 1));
   const next = () => setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
@@ -290,8 +319,9 @@ export default function CalificationFormDirect({ variant }: Props) {
   // ------- Submit
   const onSubmit = async (data: FormValues) => {
     // ✅ Type guard reutilizable
-    const isSingleRequired = (s: ContactStep | SingleStep): s is SingleStep =>
+    const isSingleRequired = (s: ContactStep | SingleStep | TextStep): s is SingleStep =>
       s.type === 'single' && s.required === true;
+
 
     // Doble seguro: si falta algún single requerido, volver al primero que falte
     const requiredIds = steps
@@ -500,6 +530,23 @@ export default function CalificationFormDirect({ variant }: Props) {
                   }}
                 />
               ))}
+            </div>
+          )}
+
+          {step.type === 'text' && (
+            <div className="mt-4">
+              <textarea
+                data-autofocus
+                rows={5}
+                placeholder={step.placeholder}
+                {...register('objetivo', { required: step.required })}
+                className="w-full rounded-xl bg-white text-[#111] px-4 py-3 outline-none resize-none"
+              />
+              {errors.objetivo && (
+                <span className="text-red-400 text-xs mt-1 block">
+                  Este campo es obligatorio
+                </span>
+              )}
             </div>
           )}
 
