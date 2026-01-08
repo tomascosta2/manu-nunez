@@ -213,24 +213,13 @@ export default function CalificationFormDirect({ variant }: Props) {
         type: 'single',
         id: 'presupuesto',
         required: true,
-        title: '¿Qué tipo de solución estás buscando para transformar tu físico?*',
-        options: [
-          {
-            value: 'presupuesto-bajo',
-            label:
-              'Quiero una solución económica para empezar por mi cuenta. (En este caso NO agendes, para cambiar tu vida necesitás invertir)',
-          },
-          {
-            value: 'presupuesto-intermedio',
-            label:
-              'Quiero un plan serio, con un equipo de profesionales ayudándome 1 a 1.',
-          },
-          {
-            value: 'presupuesto-alto',
-            label:
-              'Quiero la mejor opción disponible, se que cambiar mi fisico lo vale.',
-          },
-        ],
+        title:
+          'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada? *',
+          options: [
+            { value: 'presupuesto-bajo', label: 'Menos de 150 USD' },
+            { value: 'presupuesto-intermedio', label: 'Entre 150 y 300 USD' },
+            { value: 'presupuesto-alto', label: 'Entre usd 300 y 600 USD' },
+          ],
       },
     ],
     []
