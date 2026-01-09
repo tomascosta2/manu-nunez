@@ -216,9 +216,9 @@ export default function CalificationFormDirect({ variant }: Props) {
         title:
           'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada? *',
           options: [
-            { value: 'presupuesto-bajo', label: 'Menos de 150 USD' },
-            { value: 'presupuesto-intermedio', label: 'Entre 150 y 300 USD' },
-            { value: 'presupuesto-alto', label: 'Entre usd 300 y 600 USD' },
+            { value: 'presupuesto-bajo', label: 'Menos de 200 USD por los 3 meses de servicio 1 a 1' },
+            { value: 'presupuesto-intermedio', label: 'Entre 200 y 400 USD por los 3 meses de servicio 1 a 1' },
+            { value: 'presupuesto-alto', label: 'Entre usd 400 y 600 USD por los 3 meses de servicio 1 a 1' },
           ],
       },
     ],
