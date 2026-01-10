@@ -587,7 +587,7 @@ export default function CalificationFormDirect({ variant }: Props) {
           </div>
 
           <p className="text-white/70 text-xs mt-4">
-            PD: El método ERF está pensado para hombres ocupados que quieren resultados reales sin vivir en el gimnasio.
+            PD: El método M90 está pensado para hombres ocupados que quieren resultados reales sin vivir en el gimnasio.
           </p>
         </form>
       </div>
