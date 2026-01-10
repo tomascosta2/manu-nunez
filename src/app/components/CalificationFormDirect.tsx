@@ -348,7 +348,7 @@ export default function CalificationFormDirect({ variant }: Props) {
       });
 
       const isQualified =
-        (data.presupuesto === 'presupuesto-intermedio' || data.presupuesto === 'presupuesto-alto') &&
+        (data.presupuesto === 'presupuesto-intermedio' || data.presupuesto === 'presupuesto-alto' || data.presupuesto === 'presupuesto-muy-alto') &&
         (data.edad === 'adulto' || data.edad === 'mayor')
 
       localStorage.setItem('isQualified', isQualified ? 'true' : 'false');
