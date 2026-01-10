@@ -587,8 +587,7 @@ export default function CalificationFormDirect({ variant }: Props) {
           </div>
 
           <p className="text-white/70 text-xs mt-4">
-            PD: El método está diseñado para hombres ocupados; no es la típica rutina de
-            influencer que solo puede cumplir un adolescente que vive con los padres, ni las dietas de moda que son insostenibles.
+            PD: El método ERF está pensado para hombres ocupados que quieren resultados reales sin vivir en el gimnasio.
           </p>
         </form>
       </div>
