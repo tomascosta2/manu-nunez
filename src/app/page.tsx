@@ -21,6 +21,8 @@ export default function Home() {
   const variant = variantRef.current;
   console.log(variant);
 
+  const CTA_TEXT = variant === "A" ? "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!" : "¡QUIERO EMPEZAR MI CAMBIO!";
+
   const VIDEO_TESTIMONIALS = [
     {
       video:
@@ -71,7 +73,7 @@ export default function Home() {
         <div className="cf-container">
           <h1 className="text-center text-[20px] md:text-[32px] font-bold leading-[120%]">
             <span>
-              Bajá entre <span>6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días</span> con mi <span>Protocolo M90</span> - sin dietas extremas ni rutinas imposibles
+              Bajá entre <span>6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días</span> con mi <span>Método M90</span> - sin dietas extremas ni rutinas imposibles
             </span>
           </h1>
           <section className="relative">
@@ -104,7 +106,7 @@ export default function Home() {
                 setIsFormOpened(true);
               }}
             >
-              ¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!
+              {CTA_TEXT}
             </button>
             <p className="text-center mt-4 text-white/60 italic mx-auto max-w-[350px] text-[14px]">
               {isUnlocked
