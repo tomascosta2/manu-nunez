@@ -114,53 +114,53 @@ export default function CalificationFormDirect({ variant }: Props) {
         subtitle:
           'Tus datos son 100% confidenciales. Te tomará menos de 1 minuto.',
       },
-      {
-        type: 'single',
-        id: 'cuerpo',
-        required: true,
-        title: '¿Cómo describirías tu cuerpo hoy?*',
-        subtitle:
-          'No te preocupes, nadie va a juzgarte. Solo queremos entender por dónde empezar.',
-        options: [
-          {
-            value: 'sobrepeso-15kg',
-            label: 'Tengo sobrepeso (quiero perder más de 15 kg por salud)',
-          },
-          {
-            value: 'fuera-de-forma',
-            label:
-              'Estoy fuera de forma (quiero perder entre 7 y 15 kg y quiero verme mejor)',
-          },
-          {
-            value: 'delgado-grasa',
-            label:
-              'Soy delgado(a), pero tengo grasa rebelde que quiero eliminar y ganar músculo',
-          },
-          { value: 'otro', label: 'Otro' },
-        ],
-      },
-      {
-        type: 'single',
-        id: 'urgencia',
-        required: true,
-        title: '¿Qué tan urgente es para ti cambiar tu cuerpo ahora mismo?*',
-        subtitle:
-          'Responde con total sinceridad. Esto nos ayuda a ver cómo ayudarte.',
-        options: [
-          { value: '3', label: '(3 de 10) Estoy buscando info. No es prioridad ahora.' },
-          { value: '5', label: '(5 de 10) Quiero empezar pronto. Me estoy motivando.' },
-          {
-            value: '7',
-            label:
-              '(7 de 10) Quiero empezar ya. Me frustra cómo me siento y quiero recuperar mi salud y autoestima.',
-          },
-          {
-            value: '10',
-            label:
-              '(10 de 10) No puedo esperar más. Esto me afecta física y mentalmente. Haré lo que haga falta.',
-          },
-        ],
-      },
+      // {
+      //   type: 'single',
+      //   id: 'cuerpo',
+      //   required: true,
+      //   title: '¿Cómo describirías tu cuerpo hoy?*',
+      //   subtitle:
+      //     'No te preocupes, nadie va a juzgarte. Solo queremos entender por dónde empezar.',
+      //   options: [
+      //     {
+      //       value: 'sobrepeso-15kg',
+      //       label: 'Tengo sobrepeso (quiero perder más de 15 kg por salud)',
+      //     },
+      //     {
+      //       value: 'fuera-de-forma',
+      //       label:
+      //         'Estoy fuera de forma (quiero perder entre 7 y 15 kg y quiero verme mejor)',
+      //     },
+      //     {
+      //       value: 'delgado-grasa',
+      //       label:
+      //         'Soy delgado(a), pero tengo grasa rebelde que quiero eliminar y ganar músculo',
+      //     },
+      //     { value: 'otro', label: 'Otro' },
+      //   ],
+      // },
+      // {
+      //   type: 'single',
+      //   id: 'urgencia',
+      //   required: true,
+      //   title: '¿Qué tan urgente es para ti cambiar tu cuerpo ahora mismo?*',
+      //   subtitle:
+      //     'Responde con total sinceridad. Esto nos ayuda a ver cómo ayudarte.',
+      //   options: [
+      //     { value: '3', label: '(3 de 10) Estoy buscando info. No es prioridad ahora.' },
+      //     { value: '5', label: '(5 de 10) Quiero empezar pronto. Me estoy motivando.' },
+      //     {
+      //       value: '7',
+      //       label:
+      //         '(7 de 10) Quiero empezar ya. Me frustra cómo me siento y quiero recuperar mi salud y autoestima.',
+      //     },
+      //     {
+      //       value: '10',
+      //       label:
+      //         '(10 de 10) No puedo esperar más. Esto me afecta física y mentalmente. Haré lo que haga falta.',
+      //     },
+      //   ],
+      // },
       {
         type: 'single',
         id: 'ocupacion',
@@ -215,12 +215,12 @@ export default function CalificationFormDirect({ variant }: Props) {
         required: true,
         title:
           'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada? *',
-          options: [
-            { value: 'presupuesto-bajo', label: 'Menos de 200 USD (En este caso no vas a poder agendar)' },
-            { value: 'presupuesto-intermedio', label: 'Entre 200 y 400 USD' },
-            { value: 'presupuesto-alto', label: 'Entre 400 y 600 USD' },
-            { value: 'presupuesto-muy-alto', label: '+600 USD' },
-          ],
+        options: [
+          { value: 'presupuesto-bajo', label: 'Menos de 200 USD (En este caso no vas a poder agendar)' },
+          { value: 'presupuesto-intermedio', label: 'Entre 200 y 400 USD' },
+          { value: 'presupuesto-alto', label: 'Entre 400 y 600 USD' },
+          { value: 'presupuesto-muy-alto', label: '+600 USD' },
+        ],
       },
     ],
     []
@@ -338,7 +338,7 @@ export default function CalificationFormDirect({ variant }: Props) {
           body: JSON.stringify([{ ...data, variant }]),
         });
         console.log(result)
-      } catch {}
+      } catch { }
 
       // production
       await fetch('https://n8n.srv953925.hstgr.cloud/webhook/6f46fb81-91f5-4ffe-8b1c-783d8f3ea581', {
@@ -426,12 +426,36 @@ export default function CalificationFormDirect({ variant }: Props) {
 
   const step = steps[stepIndex];
 
+  const progress = useMemo(() => {
+    if (totalSteps <= 1) return 0;
+    // typeform-style: arranca con un poquito y termina en 100
+    return Math.round(((stepIndex + 1) / totalSteps) * 100);
+  }, [stepIndex, totalSteps]);
+
+
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-4">
       <div
         ref={containerRef}
         className="w-full md:max-w-[720px] max-h-[calc(100vh-80px)] overflow-y-auto rounded-[20px] border border-white/10 bg-[#111] p-6 md:p-10 shadow-2xl"
-      >
+      >        
+      {/* Progress bar (Typeform style) */}
+        <div className="mb-5">
+          <div className="flex items-center justify-between text-[12px] text-white/50 mb-2">
+            <span>
+              {stepIndex + 1} / {totalSteps}
+            </span>
+            <span>{progress}%</span>
+          </div>
+
+          <div className="h-[6px] w-full rounded-full bg-white/10 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-[#0051ff] transition-[width] duration-300 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+
         <h2 className="text-[22px] md:text-[26px] font-semibold text-white leading-tight">
           {step.title}
         </h2>
