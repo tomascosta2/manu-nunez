@@ -81,13 +81,13 @@ export default function Home() {
               <div className="p-1 md:p-2 text-center text-[14px] text-white font-bold bg-[#0051ff]">
                 <span>PASO 1 de 2:</span> MIRÁ EL VIDEO COMPLETO
               </div>
-              <div className="bg-[#0051ff] aspect-video rounded-[8px] md:rounded-[12px] overflow-clip">                
-                  <iframe
-                    className="w-full aspect-video"
-                    id="panda-069e112f-6e84-4b51-819b-379c77bc03b5"
-                    src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5"
-                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-                  ></iframe>
+              <div className="bg-[#0051ff] aspect-video rounded-[8px] md:rounded-[12px] overflow-clip">
+                <iframe
+                  className="w-full aspect-video"
+                  id="panda-069e112f-6e84-4b51-819b-379c77bc03b5"
+                  src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5"
+                  allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+                ></iframe>
               </div>
             </div>
           </section>
