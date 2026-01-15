@@ -97,9 +97,21 @@ export default function CalificationFormDirect({ variant }: Props) {
       urgencia: '',
       ocupacion: '',
       compromiso90: '',
+      objetivo: '',
       ad: '',
     },
   });
+
+  // Lead ID único por sesión
+  const leadIdRef = useRef<string>('');
+
+  useEffect(() => {
+    // 1 leadId por sesión (sirve para update en el submit final)
+    const existing = sessionStorage.getItem('leadId');
+    const id = existing ?? `lead-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    leadIdRef.current = id;
+    if (!existing) sessionStorage.setItem('leadId', id);
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -306,6 +318,40 @@ export default function CalificationFormDirect({ variant }: Props) {
     return () => b?.classList.remove('overflow-hidden');
   }, []);
 
+  const N8N_CONTACT_WEBHOOK =
+    'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830'; // <- poné tu webhook
+
+  const sentContactRef = useRef(false);
+
+  const sendContactToN8N = async () => {
+    if (sentContactRef.current) return; // no duplicar
+    if (!isContactValid()) return;
+
+    console.log('Enviando contacto a N8N...');
+
+    sentContactRef.current = true;
+
+    const payload = {
+      event: 'lead_contact_created',
+      leadId: leadIdRef.current,
+      variant,
+      name: values.name,
+      email: values.email,
+      phone: `${values.codigoPais}${values.telefono}`,
+      codigoPais: values.codigoPais,
+      telefono: values.telefono,
+      ad: values.ad,
+      ts: new Date().toISOString(),
+    };
+
+    // fire-and-forget (no frena UX)
+    fetch(N8N_CONTACT_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify([payload]),
+    }).catch(() => { });
+  };
+
   // ------- Submit
   const onSubmit = async (data: FormValues) => {
     // ✅ Type guard reutilizable
@@ -335,7 +381,7 @@ export default function CalificationFormDirect({ variant }: Props) {
         const result = await fetch('https://n8n.srv953925.hstgr.cloud/webhook-test/6f46fb81-91f5-4ffe-8b1c-783d8f3ea581', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify([{ ...data, variant }]),
+          body: JSON.stringify([{ ...data, variant, leadId: leadIdRef.current }]),
         });
         console.log(result)
       } catch { }
@@ -344,7 +390,7 @@ export default function CalificationFormDirect({ variant }: Props) {
       await fetch('https://n8n.srv953925.hstgr.cloud/webhook/6f46fb81-91f5-4ffe-8b1c-783d8f3ea581', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify([{ ...data, variant }]),
+          body: JSON.stringify([{ ...data, variant, leadId: leadIdRef.current }]),
       });
 
       const isQualified =
@@ -438,8 +484,8 @@ export default function CalificationFormDirect({ variant }: Props) {
       <div
         ref={containerRef}
         className="w-full md:max-w-[720px] max-h-[calc(100vh-80px)] overflow-y-auto rounded-[20px] border border-white/10 bg-[#111] p-6 md:p-10 shadow-2xl"
-      >        
-      {/* Progress bar (Typeform style) */}
+      >
+        {/* Progress bar (Typeform style) */}
         <div className="mb-5">
           <div className="flex items-center justify-between text-[12px] text-white/50 mb-2">
             <span>
@@ -581,9 +627,17 @@ export default function CalificationFormDirect({ variant }: Props) {
             ) : (
               <button
                 type="button"
-                onClick={() => {
+                onClick={async () => {
                   const s = steps[stepIndex];
-                  if (canAdvanceFromStep(s)) setStepIndex((i) => i + 1);
+
+                  if (canAdvanceFromStep(s)) {
+                    // Si estamos en el paso de contacto, mandamos el lead a n8n
+                    if (s.type === 'contact') {
+                      await sendContactToN8N();
+                    }
+
+                    setStepIndex((i) => i + 1);
+                  }
                 }}
                 className="cf-btn"
                 disabled={loading || !canAdvanceFromStep(step)}
