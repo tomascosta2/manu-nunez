@@ -1,4 +1,5 @@
 'use client';
+import { url } from "inspector/promises";
 import { useEffect, useMemo, useState } from "react";
 
 export default function CalendlyFast() {
@@ -21,12 +22,21 @@ export default function CalendlyFast() {
 
 			if (e.data?.event === "calendly.event_scheduled") {
 
-				// fetch('https://n8n.srv953925.hstgr.cloud/webhook-test/2db9bfb5-0323-4d9e-aa37-dfded650a180', {
-				fetch('https://n8n.srv953925.hstgr.cloud/webhook/2db9bfb5-0323-4d9e-aa37-dfded650a180', {
+				const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+
+				console.log("Hosting:", hostname);
+
+				const webhookCallScheduled = hostname.includes("localhost") ?
+					'https://n8n.srv953925.hstgr.cloud/webhook-test/2db9bfb5-0323-4d9e-aa37-dfded650a180' :
+					'https://n8n.srv953925.hstgr.cloud/webhook/2db9bfb5-0323-4d9e-aa37-dfded650a180';
+
+				// Envío del webhook a n8n
+				fetch(webhookCallScheduled, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						email
+						email,
+						phone,
 					}),					
 				}).catch(err => console.error('Tracking error:', err));
 
@@ -35,7 +45,8 @@ export default function CalendlyFast() {
 				const fbc = localStorage.getItem("_fbc");
 
 				// Envío del evento a tu API sólo si calificado
-				if (isQualified === "true") {
+				if (isQualified === "true" && !hostname.endsWith(".local")) {
+					console.log("Enviando evento calificado a la API");
 					fetch("/api/track/qualified-shedule", {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
@@ -48,6 +59,8 @@ export default function CalendlyFast() {
 							eventId: `schedule-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
 						}),
 					});
+				} else {
+					console.log("No se envió evento: no calificado o entorno local");
 				}
 
 				// Redirección a Thank You
