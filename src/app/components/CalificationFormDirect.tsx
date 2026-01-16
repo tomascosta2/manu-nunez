@@ -1,5 +1,6 @@
 'use client';
 
+import { hostname } from 'os';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -318,8 +319,12 @@ export default function CalificationFormDirect({ variant }: Props) {
     return () => b?.classList.remove('overflow-hidden');
   }, []);
 
-  const N8N_CONTACT_WEBHOOK =
-    'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830'; // Webhook del primer paso
+  
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+
+  const N8N_CONTACT_WEBHOOK = hostname.includes("localhost") ?
+					'https://n8n.srv953925.hstgr.cloud/webhook-test/b80b5966-0768-476a-a00f-215adf99e830' :
+					'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830';
 
   const sentContactRef = useRef(false);
 
