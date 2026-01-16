@@ -319,7 +319,7 @@ export default function CalificationFormDirect({ variant }: Props) {
   }, []);
 
   const N8N_CONTACT_WEBHOOK =
-    'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830'; // <- poné tu webhook
+    'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830'; // Webhook del primer paso
 
   const sentContactRef = useRef(false);
 

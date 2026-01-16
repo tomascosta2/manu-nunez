@@ -27,7 +27,7 @@ export default function CalendlyFast() {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						email
-					}),
+					}),					
 				}).catch(err => console.error('Tracking error:', err));
 
 				const isQualified = localStorage.getItem("isQualified");
