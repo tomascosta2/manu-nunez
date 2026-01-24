@@ -21,7 +21,7 @@ export default function Home() {
   const variant = variantRef.current;
   console.log(variant);
 
-  const CTA_TEXT = variant === "A" ? "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!" : "¡QUIERO EMPEZAR MI CAMBIO!";
+  const CTA_TEXT = "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!";
 
   const VIDEO_TESTIMONIALS = [
     {
