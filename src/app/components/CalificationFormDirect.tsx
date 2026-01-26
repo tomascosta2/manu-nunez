@@ -319,12 +319,12 @@ export default function CalificationFormDirect({ variant }: Props) {
     return () => b?.classList.remove('overflow-hidden');
   }, []);
 
-  
+
   const hostname = typeof window !== "undefined" ? window.location.hostname : "";
 
   const N8N_CONTACT_WEBHOOK = hostname.includes("localhost") ?
-					'https://n8n.srv953925.hstgr.cloud/webhook-test/b80b5966-0768-476a-a00f-215adf99e830' :
-					'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830';
+    'https://n8n.srv953925.hstgr.cloud/webhook-test/b80b5966-0768-476a-a00f-215adf99e830' :
+    'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830';
 
   const sentContactRef = useRef(false);
 
@@ -391,12 +391,14 @@ export default function CalificationFormDirect({ variant }: Props) {
         console.log(result)
       } catch { }
 
-      // production
-      await fetch('https://n8n.srv953925.hstgr.cloud/webhook/6f46fb81-91f5-4ffe-8b1c-783d8f3ea581', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      try {
+        // production
+        await fetch('https://n8n.srv953925.hstgr.cloud/webhook/6f46fb81-91f5-4ffe-8b1c-783d8f3ea581', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify([{ ...data, variant, leadId: leadIdRef.current }]),
-      });
+        });
+      } catch { console.log("Error enviando el Lead a n8n produccion") }
 
       const isQualified =
         (data.presupuesto === 'presupuesto-intermedio' || data.presupuesto === 'presupuesto-alto' || data.presupuesto === 'presupuesto-muy-alto') &&
