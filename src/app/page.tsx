@@ -22,6 +22,8 @@ export default function Home() {
   console.log(variant);
 
   const CTA_TEXT = "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!";
+  const HEADLINE_TEXT = variant === "A" ? "Bajá entre 6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días con mi Método M90" : 
+    "Bajá entre 8 y 12 kg de grasa, recupera tu energía y tonificá en 90 días priorizando el descanso";
 
   const VIDEO_TESTIMONIALS = [
     {
@@ -71,11 +73,12 @@ export default function Home() {
       {/* Sección VSL (siempre visible) */}
       <section className="mt-6 md:mt-8 pb-[60px] md:pb-[80px]">
         <div className="cf-container">
-          <h1 className="text-center text-[20px] md:text-[32px] font-bold leading-[120%]">
+          <h1 className="text-center text-[20px] md:text-[32px] uppercase font-bold leading-[120%]">
             <span>
-              Bajá entre <span>6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días</span> con mi <span>Método M90</span> - sin dietas extremas ni rutinas imposibles
+              {HEADLINE_TEXT}
             </span>
           </h1>
+          <p className="text-white/80 text-center max-w-[500px] mx-auto mt-4">No entrenas solo, yo y un nutricionista experto en pérdida de peso vamos a trabajar 1 a 1 con vos.</p>
           <section className="relative">
             <div className="bg-[#0051ff] border-4 overflow-clip rounded-[12px] md:rounded-[16px] border-[#0051ff] mt-6 max-w-[750px] mx-auto">
               <div className="p-1 md:p-2 text-center text-[14px] text-white font-bold bg-[#0051ff]">
