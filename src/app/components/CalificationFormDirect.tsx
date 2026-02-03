@@ -1,6 +1,5 @@
 'use client';
 
-import { hostname } from 'os';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -227,11 +226,11 @@ export default function CalificationFormDirect({ variant }: Props) {
         id: 'presupuesto',
         required: true,
         title:
-          'En caso de ser aceptado ¿Cuánto dinero dispones para invertir en vos y ser acompañado por un equipo integral de profesionales que te ayudaran a lograr tus objetivos de forma garantizada?',
+          'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada?',
         options: [
-          { value: 'presupuesto-intermedio', label: 'Entre 80 a 140 usd/mes' },
-          { value: 'presupuesto-alto', label: 'Entre 140 a 200 usd/mes' },
-          { value: 'presupuesto-muy-alto', label: 'Entre 200 a 300 usd/mes' },
+          { value: 'presupuesto-intermedio', label: '200 a 400 USD' },
+          { value: 'presupuesto-alto', label: 'Entre 400 y 600 USD' },
+          { value: 'presupuesto-muy-alto', label: 'Más de 600 USD' },
           { value: 'presupuesto-bajo', label: 'No tengo dinero para invertir en mi calidad de vida, imagen y salud (NO AGENDES si no estas dispuesto en invertir en vos y en tu salud)' },
         ],
       },
@@ -426,6 +425,10 @@ export default function CalificationFormDirect({ variant }: Props) {
       const fbc = getCookieValue('_fbc');
 
       if (isQualified) {
+        const leadEventId = `lead-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        localStorage.setItem('lead_event_id', leadEventId);
+        if (fbp) localStorage.setItem('_fbp', fbp);
+        if (fbc) localStorage.setItem('_fbc', fbc);
         await fetch('/api/track/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -434,7 +437,7 @@ export default function CalificationFormDirect({ variant }: Props) {
             phone: `${data.codigoPais}${data.telefono}`,
             fbp,
             fbc,
-            eventId: `lead-${Date.now()}`,
+            eventId: leadEventId,
           }),
         });
       }

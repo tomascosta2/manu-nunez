@@ -1,5 +1,4 @@
 'use client';
-import { url } from "inspector/promises";
 import { useEffect, useMemo, useState } from "react";
 
 export default function CalendlyFast() {
@@ -8,11 +7,55 @@ export default function CalendlyFast() {
 	const [phone, setPhone] = useState('');
 	const [frameLoaded, setFrameLoaded] = useState(false);
 
+	const fireFbq = (
+		eventName: string,
+		eventId: string,
+		payload: Record<string, unknown> = {},
+		onSuccess?: () => void
+	) => {
+		let attempts = 0;
+		const tryFire = () => {
+			attempts += 1;
+			const fbq = (window as any)?.fbq;
+			if (typeof fbq === "function") {
+				try {
+					fbq("track", eventName, payload, { eventID: eventId });
+					onSuccess?.();
+				} catch {}
+				return;
+			}
+			if (attempts < 10) {
+				setTimeout(tryFire, 200);
+			}
+		};
+		tryFire();
+	};
+
 	// Cargar prefill desde localStorage
 	useEffect(() => {
 		setName(localStorage.getItem('name') || '');
 		setEmail(localStorage.getItem('email') || '');
 		setPhone(localStorage.getItem('phone') || '');
+	}, []);
+
+	// Lead Pixel (dedup con CAPI) al entrar si es calificado
+	useEffect(() => {
+		try {
+			const isQualified = localStorage.getItem("isQualified");
+			if (isQualified !== "true") return;
+			const alreadyFired = localStorage.getItem("lead_fired");
+			if (alreadyFired) return;
+
+			const leadEventId =
+				localStorage.getItem("lead_event_id") ||
+				`lead-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+			// @ts-ignore
+			window.fbq?.("track", "Lead", {}, { eventID: leadEventId });
+
+			localStorage.setItem("lead_fired", leadEventId);
+			localStorage.removeItem("lead_event_id");
+		} catch { }
 	}, []);
 
 	// Listener de eventos de Calendly (funciona igual con iframe)
@@ -44,23 +87,38 @@ export default function CalendlyFast() {
 				const fbp = localStorage.getItem("_fbp");
 				const fbc = localStorage.getItem("_fbc");
 
-				// Envío del evento a tu API sólo si calificado
-				if (isQualified === "true" && !hostname.endsWith(".local")) {
-					console.log("Enviando evento calificado a la API");
-					fetch("/api/track/qualified-shedule", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({
-							eventName: "Schedule",
-							email,
-							phone,
-							fbp,
-							fbc,
-							eventId: `schedule-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-						}),
-					});
+				if (isQualified === "true") {
+					const eventId = `schedule-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+					localStorage.setItem("schedule_event_id", eventId);
+
+					// Envío del evento a tu API sólo si calificado
+					if (!hostname.endsWith(".local")) {
+						console.log("Enviando evento calificado a la API");
+						fetch("/api/track/qualified-shedule", {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify({
+								eventName: "Schedule",
+								email,
+								phone,
+								fbp,
+								fbc,
+								eventId,
+							}),
+						});
+					} else {
+						console.log("No se envió evento: entorno local");
+					}
+
+					// Schedule Pixel (dedup con CAPI)
+					const scheduleFired = localStorage.getItem("schedule_fired");
+					if (scheduleFired !== "true") {
+						fireFbq("Schedule", eventId, {}, () => {
+							localStorage.setItem("schedule_fired", "true");
+						});
+					}
 				} else {
-					console.log("No se envió evento: no calificado o entorno local");
+					console.log("No se envió evento: no calificado");
 				}
 
 				// Redirección a Thank You

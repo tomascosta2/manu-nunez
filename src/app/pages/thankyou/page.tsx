@@ -11,6 +11,30 @@ export default function ThankYou() {
   const [agreeOnTime, setAgreeOnTime] = useState(false);
   const [agreeNoReschedule, setAgreeNoReschedule] = useState(false);
 
+  const fireFbq = (
+    eventName: string,
+    eventId: string,
+    payload: Record<string, unknown> = {},
+    onSuccess?: () => void
+  ) => {
+    let attempts = 0;
+    const tryFire = () => {
+      attempts += 1;
+      const fbq = (window as any)?.fbq;
+      if (typeof fbq === "function") {
+        try {
+          fbq("track", eventName, payload, { eventID: eventId });
+          onSuccess?.();
+        } catch {}
+        return;
+      }
+      if (attempts < 10) {
+        setTimeout(tryFire, 200);
+      }
+    };
+    tryFire();
+  };
+
   useEffect(() => {
     try {
       const q = new URLSearchParams(window.location.search);
@@ -22,6 +46,22 @@ export default function ThankYou() {
       setName(n ?? "");
       setStartAt(s ?? "");
     } catch {}
+  }, []);
+
+  // Schedule Pixel fallback (si no se disparó en Calendly)
+  useEffect(() => {
+    const isQualified = localStorage.getItem("isQualified");
+    const scheduleFired = localStorage.getItem("schedule_fired");
+    if (isQualified === "true" && scheduleFired !== "true") {
+      const eventId = localStorage.getItem("schedule_event_id");
+      if (eventId) {
+        fireFbq("Schedule", eventId, {}, () => {
+          localStorage.setItem("schedule_fired", "true");
+          localStorage.removeItem("schedule_event_id");
+          localStorage.removeItem("isQualified");
+        });
+      }
+    }
   }, []);
 
   // Countdown
