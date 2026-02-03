@@ -23,7 +23,7 @@ export default function Home() {
 
   const CTA_TEXT = "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!";
   const HEADLINE_TEXT = variant === "A" ? "Bajá entre 6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días con mi Método M90" : 
-    "Bajá entre 8 y 12 kg de grasa, recupera tu energía y tonificá en 90 días priorizando el descanso";
+    "Bajá entre 8 y 12 kg de grasa, recupera tu energía y tonificá en 90 días con mi método M90 y priorizando el descanso";
 
   const VIDEO_TESTIMONIALS = [
     {
