@@ -138,7 +138,7 @@ export default function Home() {
         <div className="cf-container relative">
           <div className="mx-auto w-full max-w-[1200px] text-center">
             <h2 className="text-[32px] md:text-[50px] max-w-[760px] mx-auto font-bold text-white leading-[130%]">
-              Estos resultados podés obtener si agendas hoy
+              Tasa de exito del 100% en la pérdida de grasa de mis alumnos.
             </h2>
             <p className="mt-4 text-white/80 text-[18px] max-w-[420px] mx-auto">
               Si ellos pudieron, vos también podés.

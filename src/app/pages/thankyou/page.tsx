@@ -199,7 +199,10 @@ export default function ThankYou() {
         {/* Checklist de compromiso */}
         <div className="rounded-xl border p-4 bg-white mb-4">
           <p className="font-semibold text-[18px] mb-2 text-black">
-            Checklist (2 minutos) — marcá para habilitar la confirmación:
+            Marca para habilitar la confirmación y asegurar tu lugar:
+          </p>
+          <p className="text-[14px] text-black/80 mb-4">
+            PD: Si no tenes suficiente compromiso para hablar por whatsapp, confirmar tu asistencia y contarme un poco más sobre vos, probablemente no seas el mejor candidato para el programa. No queremos que ocupes un cupo si no estás 100% comprometido con tu cambio.
           </p>
           <label className="flex items-start gap-3 text-[16px] text-black mb-2">
             <input type="checkbox" className="mt-1" checked={agreeQuietPlace} onChange={e => setAgreeQuietPlace(e.target.checked)} />
@@ -207,7 +210,7 @@ export default function ThankYou() {
           </label>
           <label className="flex items-start gap-3 text-[16px] text-black mb-2">
             <input type="checkbox" className="mt-1" checked={agreeOnTime} onChange={e => setAgreeOnTime(e.target.checked)} />
-            <span>Me comprometo a llegar a tiempo (respeto el cupo y la agenda).</span>
+            <span>Realmente quiero cambiar, y me voy a comprometer a hacerlo.</span>
           </label>
           <label className="flex items-start gap-3 text-[16px] text-black">
             <input type="checkbox" className="mt-1" checked={agreeNoReschedule} onChange={e => setAgreeNoReschedule(e.target.checked)} />
@@ -255,13 +258,21 @@ export default function ThankYou() {
               No tengo tiempo todos los días, ¿igual puedo?
             </AccordionTrigger>
             <AccordionContent className="text-[16px]">
-              Sí. Planes efectivos de 3 sesiones siples/semana, 100% adaptados a tu agenda.
+              Sí. Planes efectivos de 3 sesiones siples/semana, 100% adaptados a tu agenda y ajustados constantemente según tus avances.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="q4">
+            <AccordionTrigger className="text-[18px] font-bold leading-[120%]">
+              Ya he intentado y no me ha funcionado, ¿qué tiene de diferente este programa?
+            </AccordionTrigger>
+            <AccordionContent className="text-[16px]">
+              No somos un nutricionista ni un coach generico, nos especializamos en ayudar a hombres +30 a lograr una recomposición corporal, no es solo pérdida de peso. Nos enfocamos en preservar y aumentar tu masa muscular mientras perdes grasa, lo que mejora tu metabolismo, salud hormonal y resultados a largo plazo. Además, el programa es 100% personalizado y adaptativo, ajustándose a tus necesidades y progreso.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
 
         {/* Social proof compacto arriba del fold */}
-        <div className="grid md:grid-cols-3 gap-4 mt-8">
+        {/* <div className="grid md:grid-cols-3 gap-4 mt-8">
           {[
             { txt: "-10 KG en 3 Meses", img: "/images/testimonios/testimonio-2.png" },
             { txt: "-8 KG en 3 Meses", img: "/images/testimonios/testimonio-3.png" },
@@ -272,12 +283,15 @@ export default function ThankYou() {
               <img className="w-full h-[260px] object-cover" src={t.img} alt={`Cambio ${i+1}`} />
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Checklist de compromiso */}
-        <div className="rounded-xl border p-4 bg-white mt-8">
+        {/* <div className="rounded-xl border p-4 bg-white mt-8">
           <p className="font-semibold text-[18px] mb-2 text-black">
-            Checklist (2 minutos) — marcá para habilitar la confirmación:
+            Marca para habilitar la confirmación y asegurar tu lugar:
+          </p>
+          <p className="text-[14px] text-black/80 mb-4">
+            Esto nos ayuda a asegurarnos de que solo personas realmente comprometidas ocupen los cupos limitados.
           </p>
           <label className="flex items-start gap-3 text-[16px] text-black mb-2">
             <input type="checkbox" className="mt-1" checked={agreeQuietPlace} onChange={e => setAgreeQuietPlace(e.target.checked)} />
@@ -285,13 +299,13 @@ export default function ThankYou() {
           </label>
           <label className="flex items-start gap-3 text-[16px] text-black mb-2">
             <input type="checkbox" className="mt-1" checked={agreeOnTime} onChange={e => setAgreeOnTime(e.target.checked)} />
-            <span>Me comprometo a llegar a tiempo (respeto el cupo y la agenda).</span>
+            <span>Realmente quiero cambiar, y me voy a comprometer a hacerlo.</span>
           </label>
           <label className="flex items-start gap-3 text-[16px] text-black">
             <input type="checkbox" className="mt-1" checked={agreeNoReschedule} onChange={e => setAgreeNoReschedule(e.target.checked)} />
             <span>Si no puedo asistir, reprogramo con anticipación para liberar el lugar.</span>
           </label>
-        </div>
+        </div> */}
 
         {/* CTA repetido al final */}
         <a
