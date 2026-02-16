@@ -199,7 +199,7 @@ export default function ThankYou() {
         {/* Checklist de compromiso */}
         <div className="rounded-xl border p-4 bg-white mb-4">
           <p className="font-semibold text-[18px] mb-2 text-black">
-            Marca para habilitar la confirmación y asegurar tu lugar:
+            Marca para habilitar la confirmación y hablemos por whatsapp para asegurar tu lugar:
           </p>
           <p className="text-[14px] text-black/80 mb-4">
             PD: Si no tenes suficiente compromiso para hablar por whatsapp, confirmar tu asistencia y contarme un poco más sobre vos, probablemente no seas el mejor candidato para el programa. No queremos que ocupes un cupo si no estás 100% comprometido con tu cambio.
