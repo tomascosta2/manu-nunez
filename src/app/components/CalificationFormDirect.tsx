@@ -230,7 +230,7 @@ export default function CalificationFormDirect({ variant, onClose }: Props) {
             type: 'single' as const,
             id: 'presupuesto' as const,
             required: true,
-            title: '¿Podrías comprometer al menos 400 USD al mes para tu proceso de transformación física si vemos que el programa es adecuado para vos?',
+            title: '¿Podrías comprometer al menos 150 USD al mes para tu proceso de transformación física si vemos que el programa es adecuado para vos?',
             subtitle:
               'Nuestro programa es un acompañamiento profesional completo y suele requerir una inversión mensual acorde al nivel de soporte del equipo. Para asegurarnos de que la llamada tenga sentido para vos y para nosotros, necesitamos confirmar lo siguiente.',
             options: [
