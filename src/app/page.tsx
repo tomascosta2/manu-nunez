@@ -23,7 +23,7 @@ export default function Home() {
   const headlineText =
     variant === "A"
       ? "Bajá entre 6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días con mi Método M90"
-      : "Bajá entre 8 y 12 kg de grasa, recupera tu energía y tonificá en 90 días con mi método M90";
+      : "Bajá entre 6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días con mi Método M90";
 
   const testimonials = [
     {
@@ -76,7 +76,7 @@ export default function Home() {
             <span>{headlineText}</span>
           </h1>
           <p className="text-white/80 text-center mt-2 max-w-[750px] mx-auto">
-            Sin dietas extremas ni rutinas imposibles. No entrenás solo: trabajamos 1 a 1 con vos durante todo el proceso.
+            Sin dietas extremas ni rutinas imposibles.
           </p>
 
           <section className="relative">

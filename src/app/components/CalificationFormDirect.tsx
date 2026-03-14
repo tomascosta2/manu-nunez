@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-type Props = { variant: string };
+type Props = { variant: 'A' | 'B'; onClose: () => void };
 type Opcion = { value: string; label: string };
 
 type FormValues = {
@@ -123,7 +123,7 @@ const ensureFbcFromFbclid = () => {
   } catch {}
 };
 
-export default function CalificationFormDirect({ variant }: Props) {
+export default function CalificationFormDirect({ variant, onClose }: Props) {
   const {
     register,
     handleSubmit,
@@ -159,6 +159,15 @@ export default function CalificationFormDirect({ variant }: Props) {
 
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const urlVariant = useMemo<'A' | 'B' | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const param = new URLSearchParams(window.location.search)
+      .get('variant')
+      ?.trim()
+      .toUpperCase();
+    return param === 'A' || param === 'B' ? param : null;
+  }, []);
+  const activeVariant = urlVariant ?? variant;
 
   const steps = useMemo<(ContactStep | SingleStep | TextStep)[]>(
     () => [
@@ -216,25 +225,39 @@ export default function CalificationFormDirect({ variant }: Props) {
         placeholder:
           'Ej: Tener más energía, dejar de cansarme, sentirme bien con mi cuerpo, mejorar mi salud...',
       },
-      {
-        type: 'single',
-        id: 'presupuesto',
-        required: true,
-        title:
-          'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada?',
-        options: [
-          { value: 'presupuesto-intermedio', label: '200 a 400 USD' },
-          { value: 'presupuesto-alto', label: 'Entre 400 y 600 USD' },
-          { value: 'presupuesto-muy-alto', label: 'Más de 600 USD' },
-          {
-            value: 'presupuesto-bajo',
-            label:
-              'No tengo dinero para invertir en mi calidad de vida, imagen y salud (NO AGENDES si no estas dispuesto en invertir en vos y en tu salud)',
+      activeVariant === 'B'
+        ? {
+            type: 'single' as const,
+            id: 'presupuesto' as const,
+            required: true,
+            title: '¿Podrías comprometer al menos 400 USD al mes para tu proceso de transformación física si vemos que el programa es adecuado para vos?',
+            subtitle:
+              'Nuestro programa es un acompañamiento profesional completo y suele requerir una inversión mensual acorde al nivel de soporte del equipo. Para asegurarnos de que la llamada tenga sentido para vos y para nosotros, necesitamos confirmar lo siguiente.',
+            options: [
+              { value: 'presupuesto-alto', label: 'Sí, quiero asegurar mi cambio.' },
+              { value: 'presupuesto-intermedio', label: 'Sí, pero primero necesito ver cómo es el servicio.' },
+              { value: 'presupuesto-bajo', label: 'No en este momento.' },
+            ],
+          }
+        : {
+            type: 'single' as const,
+            id: 'presupuesto' as const,
+            required: true,
+            title:
+              'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada?',
+            options: [
+              { value: 'presupuesto-intermedio', label: '200 a 400 USD' },
+              { value: 'presupuesto-alto', label: 'Entre 400 y 600 USD' },
+              { value: 'presupuesto-muy-alto', label: 'Más de 600 USD' },
+              {
+                value: 'presupuesto-bajo',
+                label:
+                  'No tengo dinero para invertir en mi calidad de vida, imagen y salud (NO AGENDES si no estas dispuesto en invertir en vos y en tu salud)',
+              },
+            ],
           },
-        ],
-      },
     ],
-    []
+    [activeVariant]
   );
 
   const [stepIndex, setStepIndex] = useState(0);
