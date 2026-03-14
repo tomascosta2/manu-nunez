@@ -60,7 +60,7 @@ export default function Home() {
       />
       <div className="bg-[var(--primary)]/80 size-[600px] rounded-full left-1/2 transform hidden md:block -translate-x-1/2 absolute -z-50 blur-[800px] -top-[400px]"></div>
 
-      {isFormOpened && <CalificationFormDirect variant={variant} />}
+      {isFormOpened && <CalificationFormDirect variant={variant} onClose={() => setIsFormOpened(false)} />}
 
       <header className="bg-linear-0 from-[#0E0E0E] to-[#1C1B1B] max-w-[85%] w-[500px] rounded-full mx-auto border border-[var(--primary)]/30 z-50">
         <div className="cf-container">
