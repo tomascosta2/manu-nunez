@@ -2,9 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import CalificationFormDirect from "./components/CalificationFormDirect";
+import CalendlyInline from "./components/CalendlyInline";
 
 export default function Home() {
   const [isFormOpened, setIsFormOpened] = useState(false);
+  const [showCalendly, setShowCalendly] = useState(false);
+  const [calendlyPrefill, setCalendlyPrefill] = useState<{ name: string; email: string; phone: string } | null>(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
@@ -47,7 +50,28 @@ export default function Home() {
   const altImgGeneric = "Manu Nuñez - Fit";
 
   return (
-    <div className="relative overflow-clip pt-12">
+    <>
+      {/* Precarga oculta del calendly desde que se completa el paso de contacto */}
+      {(calendlyPrefill !== null || showCalendly) && (
+        <div
+          style={{
+            opacity: showCalendly ? 1 : 0,
+            pointerEvents: showCalendly ? "auto" : "none",
+            position: showCalendly ? "relative" : "fixed",
+            inset: showCalendly ? "auto" : "0",
+            zIndex: showCalendly ? "auto" : 0,
+          }}
+        >
+          <CalendlyInline
+            name={calendlyPrefill?.name ?? ""}
+            email={calendlyPrefill?.email ?? ""}
+            phone={calendlyPrefill?.phone ?? ""}
+          />
+        </div>
+      )}
+
+      {!showCalendly && (
+      <div className="relative overflow-clip pt-12">
       <img
         src="/images/Sombra.webp"
         alt="Sombra"
@@ -60,7 +84,18 @@ export default function Home() {
       />
       <div className="bg-[var(--primary)]/80 size-[600px] rounded-full left-1/2 transform hidden md:block -translate-x-1/2 absolute -z-50 blur-[800px] -top-[400px]"></div>
 
-      {isFormOpened && <CalificationFormDirect variant={variant} onClose={() => setIsFormOpened(false)} />}
+      {isFormOpened && (
+        <CalificationFormDirect
+          variant={variant}
+          onClose={() => setIsFormOpened(false)}
+          onContactReady={(name, email, phone) => setCalendlyPrefill({ name, email, phone })}
+          onCalendly={() => {
+            setIsFormOpened(false);
+            setShowCalendly(true);
+            window.history.pushState(null, '', '?calendario');
+          }}
+        />
+      )}
 
       <header className="bg-linear-0 from-[#0E0E0E] to-[#1C1B1B] max-w-[85%] w-[500px] rounded-full mx-auto border border-[var(--primary)]/30 z-50">
         <div className="cf-container">
@@ -208,5 +243,7 @@ export default function Home() {
         </span>
       </p>
     </div>
+      )}
+    </>
   );
 }
