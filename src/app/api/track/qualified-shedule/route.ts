@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   const hashPhone = await hashSHA256(data.phone);
 
   const response = await fetch(
-    `https://graph.facebook.com/v18.0/1391736115664543/events?access_token=${process.env.API_ACCESS_TOKEN}`,
+    `https://graph.facebook.com/v22.0/1391736115664543/events?access_token=${process.env.API_ACCESS_TOKEN}`,
     {
       method: 'POST',
       headers: {
