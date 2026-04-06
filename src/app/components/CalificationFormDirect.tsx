@@ -23,14 +23,18 @@ type FormValues = {
   ocupacion: string;
   compromiso90: string;
   objetivo: string;
+  freno: string;
+  intentos: string;
   ad: string;
 };
 
 // IDs válidos de preguntas de opción única
 type SingleId = Extract<
   keyof FormValues,
-  'edad' | 'presupuesto' | 'cuerpo' | 'urgencia' | 'ocupacion' | 'compromiso90'
+  'presupuesto' | 'cuerpo' | 'urgencia' | 'ocupacion' | 'compromiso90'
 >;
+
+type MultiId = 'freno' | 'intentos';
 
 type ContactStep = {
   type: 'contact';
@@ -48,13 +52,23 @@ type SingleStep = {
   required?: boolean;
 };
 
+type MultiStep = {
+  type: 'multi';
+  id: MultiId;
+  title: string;
+  subtitle?: string;
+  options: Opcion[];
+  required?: boolean;
+};
+
 type TextStep = {
   type: 'text';
-  id: 'objetivo';
+  id: 'objetivo' | 'edad';
   title: string;
   subtitle?: string;
   placeholder?: string;
   required?: boolean;
+  inputType?: 'textarea' | 'number';
 };
 
 const PAISES = [
@@ -95,7 +109,7 @@ const getCookieValue = (cookieName: string) => {
   return '';
 };
 
-// Crea _fbc si llega fbclid y no existe (clave para test y para que CAPI tenga fbc)
+// Crea _fbc si llega fbclid y no existe (clave para que CAPI tenga fbc)
 const ensureFbcFromFbclid = () => {
   if (typeof window === 'undefined') return;
 
@@ -148,13 +162,14 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
       ocupacion: '',
       compromiso90: '',
       objetivo: '',
+      freno: '',
+      intentos: '',
       ad: '',
     },
   });
 
   // Lead ID único por sesión
   const leadIdRef = useRef<string>('');
-
   useEffect(() => {
     const existing = sessionStorage.getItem('leadId');
     const id = existing ?? `lead-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -163,18 +178,19 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
   }, []);
 
   const [loading, setLoading] = useState(false);
+  const [multiSelections, setMultiSelections] = useState<Record<string, string[]>>({ freno: [], intentos: [] });
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const urlVariant = useMemo<'A' | 'B' | null>(() => {
-    if (typeof window === 'undefined') return null;
-    const param = new URLSearchParams(window.location.search)
-      .get('variant')
-      ?.trim()
-      .toUpperCase();
-    return param === 'A' || param === 'B' ? param : null;
-  }, []);
-  const activeVariant = urlVariant ?? variant;
 
-  const steps = useMemo<(ContactStep | SingleStep | TextStep)[]>(
+  const toggleMulti = (id: MultiId, value: string) => {
+    setMultiSelections((prev) => {
+      const current = prev[id] ?? [];
+      const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+      setValue(id as keyof FormValues, next.join(',') as any);
+      return { ...prev, [id]: next };
+    });
+  };
+
+  const steps = useMemo<(ContactStep | SingleStep | MultiStep | TextStep)[]>(
     () => [
       {
         type: 'contact',
@@ -211,15 +227,24 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
       },
       {
         type: 'single',
+        id: 'urgencia',
+        required: true,
+        title: '¿Qué tan urgente es para vos cambiar tu cuerpo ahora mismo?*',
+        subtitle: 'Respondé con total sinceridad. Esto nos ayuda a ver cómo ayudarte.',
+        options: [
+          { value: 'urgencia-baja', label: '(3 de 10) Estoy buscando info. No es prioridad ahora.' },
+          { value: 'urgencia-media', label: '(5 de 10) Quiero empezar pronto. Me estoy motivando.' },
+          { value: 'urgencia-alta', label: '(7 de 10) Quiero empezar ya. Me frustra cómo me siento y quiero recuperar mi salud y energía.' },
+          { value: 'urgencia-muy-alta', label: '(10 de 10) No puedo esperar más. Esto me afecta física y mentalmente. Haré lo que haga falta.' },
+        ],
+      },
+      {
+        type: 'text',
         id: 'edad',
         required: true,
-        title: '¿En qué rango de edad te encontrás?*',
-        options: [
-          { value: 'menor', label: 'Soy menor de edad' },
-          { value: 'joven', label: '18 - 24 años' },
-          { value: 'adulto', label: '24 - 44 años' },
-          { value: 'mayor', label: '+44 años' },
-        ],
+        title: '¿Cuántos años tenés?*',
+        placeholder: 'Ej: 35',
+        inputType: 'number',
       },
       {
         type: 'text',
@@ -227,42 +252,51 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
         required: true,
         title: '¿Cuál es tu objetivo de salud/calidad de vida y cómo querés sentirte en los próximos meses?*',
         subtitle: 'Cuanto más nos cuentes, mejor vamos a poder ayudarte.',
-        placeholder:
-          'Ej: Tener más energía, dejar de cansarme, sentirme bien con mi cuerpo, mejorar mi salud...',
+        placeholder: 'Ej: Tener más energía, dejar de cansarme, sentirme bien con mi cuerpo, mejorar mi salud...',
       },
-      activeVariant === 'B'
-        ? {
-            type: 'single' as const,
-            id: 'presupuesto' as const,
-            required: true,
-            title: '¿Podrías comprometer al menos 150 USD al mes para tu proceso de transformación física si vemos que el programa es adecuado para vos?',
-            subtitle:
-              'Nuestro programa es un acompañamiento profesional completo y suele requerir una inversión mensual acorde al nivel de soporte del equipo. Para asegurarnos de que la llamada tenga sentido para vos y para nosotros, necesitamos confirmar lo siguiente.',
-            options: [
-              { value: 'presupuesto-alto', label: 'Sí, quiero asegurar mi cambio.' },
-              { value: 'presupuesto-intermedio', label: 'Sí, pero primero necesito ver cómo es el servicio.' },
-              { value: 'presupuesto-bajo', label: 'No en este momento.' },
-            ],
-          }
-        : {
-            type: 'single' as const,
-            id: 'presupuesto' as const,
-            required: true,
-            title:
-              'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada?',
-            options: [
-              { value: 'presupuesto-intermedio', label: '200 a 400 USD' },
-              { value: 'presupuesto-alto', label: 'Entre 400 y 600 USD' },
-              { value: 'presupuesto-muy-alto', label: 'Más de 600 USD' },
-              {
-                value: 'presupuesto-bajo',
-                label:
-                  'No tengo dinero para invertir en mi calidad de vida, imagen y salud (NO AGENDES si no estas dispuesto en invertir en vos y en tu salud)',
-              },
-            ],
-          },
+      {
+        type: 'multi',
+        id: 'freno',
+        required: true,
+        title: '¿Qué es lo que más te frena para lograr tu objetivo físico?*',
+        subtitle: 'Podés elegir más de una opción.',
+        options: [
+          { value: 'constancia', label: 'Me falta constancia y disciplina.' },
+          { value: 'estructura', label: 'No tengo una estructura clara a seguir.' },
+          { value: 'tiempo', label: 'Apenas tengo tiempo libre.' },
+          { value: 'alimentacion', label: 'No sé qué comer para ver resultados.' },
+          { value: 'lesion', label: 'Tengo una lesión o limitación física.' },
+        ],
+      },
+      {
+        type: 'multi',
+        id: 'intentos',
+        required: true,
+        title: '¿Qué has probado antes para mejorar tu físico o tu salud?*',
+        subtitle: 'Podés elegir más de una opción.',
+        options: [
+          { value: 'dietas', label: 'Dietas por mi cuenta, sin resultado duradero.' },
+          { value: 'gimnasio', label: 'Gimnasio o entrenamiento sin guía.' },
+          { value: 'programa', label: 'Un programa o coach, pero no funcionó.' },
+          { value: 'nada', label: 'Casi nada, no sé por dónde empezar.' },
+          { value: 'varias', label: 'Varias cosas, pero nada me dio resultados consistentes.' },
+        ],
+      },
+      {
+        type: 'single' as const,
+        id: 'presupuesto' as const,
+        required: true,
+        title: '¿Podrías destinar al menos 150 USD al mes para tu proceso de transformación física si vemos que el programa es adecuado para vos? (3 meses)',
+        subtitle:
+          'Nuestro programa es un acompañamiento profesional completo y requiere una inversión mensual acorde al nivel de soporte del equipo. Para asegurarnos de que la llamada tenga sentido para vos y para nosotros, necesitamos confirmar lo siguiente.',
+        options: [
+          { value: 'presupuesto-alto', label: 'Sí, quiero asegurar mi cambio.' },
+          { value: 'presupuesto-intermedio', label: 'Sí, pero primero necesito ver cómo es el servicio.' },
+          { value: 'presupuesto-bajo', label: 'No en este momento.' },
+        ],
+      },
     ],
-    [activeVariant]
+    [variant]
   );
 
   const [stepIndex, setStepIndex] = useState(0);
@@ -285,109 +319,46 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
     return isNameValid && isEmailValid && isPhoneValid;
   };
 
-  const canAdvanceFromStep = (s: ContactStep | SingleStep | TextStep) => {
+  const canAdvanceFromStep = (s: ContactStep | SingleStep | MultiStep | TextStep) => {
     if (s.type === 'contact') return isContactValid();
-
     if (s.type === 'single' && s.required === true) return !!values[s.id];
-
+    if (s.type === 'multi' && s.required === true) return (multiSelections[s.id]?.length ?? 0) > 0;
+    if (s.type === 'text' && s.id === 'edad' && s.required === true) return parseInt(values.edad) > 0;
     if (s.type === 'text' && s.required === true) return (values.objetivo ?? '').trim().length > 10;
-
     return true;
   };
 
   const back = () => setStepIndex((i) => Math.max(0, i - 1));
   const next = () => setStepIndex((i) => Math.min(totalSteps - 1, i + 1));
 
-  // Avance centralizado (para que teclado y botón hagan lo mismo + envío n8n en contacto)
-  const sentContactRef = useRef(false);
-
-  const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
-  const isLocalhost =
-    hostname.includes('localhost') || hostname.includes('127.0.0.1');
-
-  const N8N_CONTACT_WEBHOOK = isLocalhost
-    ? 'https://n8n.srv953925.hstgr.cloud/webhook-test/b80b5966-0768-476a-a00f-215adf99e830'
-    : 'https://n8n.srv953925.hstgr.cloud/webhook/b80b5966-0768-476a-a00f-215adf99e830';
-
-  const sendContactToN8N = async () => {
-    if (sentContactRef.current) return;
-    if (!isContactValid()) return;
-
-    sentContactRef.current = true;
-
-    const payload = {
-      event: 'lead_contact_created',
-      leadId: leadIdRef.current,
-      variant,
-      name: values.name,
-      email: values.email,
-      phone: `${values.codigoPais}${values.telefono}`,
-      codigoPais: values.codigoPais,
-      telefono: values.telefono,
-      ad: values.ad,
-      ts: new Date().toISOString(),
-    };
-
-    fetch(N8N_CONTACT_WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify([payload]),
-    }).catch(() => {});
-  };
-
-  const advance = async () => {
-    const s = steps[stepIndex];
-    if (!canAdvanceFromStep(s)) return;
-
-    if (s.type === 'contact') {
-      await sendContactToN8N();
-      onContactReady?.(values.name, values.email, `${values.codigoPais}${values.telefono}`);
-    }
-
-    next();
-  };
-
-  // Atajos teclado (respetan validación + envían contacto si corresponde)
+  // Atajos teclado (respetan validación)
   useEffect(() => {
-    const onKey = async (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       const step = steps[stepIndex];
 
       if (step.type === 'single') {
-        const selectByIndex = async (idx: number) => {
+        const selectByIndex = (idx: number) => {
           const opt = step.options[idx];
           if (!opt) return;
           setValue(step.id, opt.value as FormValues[SingleId], { shouldValidate: true });
-          await advance();
+          next();
         };
 
         const key = e.key.toLowerCase();
-        if (['1', '2', '3', '4', '5', '6'].includes(key)) {
-          e.preventDefault();
-          await selectByIndex(Number(key) - 1);
-          return;
-        }
-        if (['a', 'b', 'c', 'd', 'e', 'f'].includes(key)) {
-          e.preventDefault();
-          await selectByIndex(key.charCodeAt(0) - 'a'.charCodeAt(0));
-          return;
-        }
+        if (['1', '2', '3', '4', '5', '6'].includes(key)) selectByIndex(Number(key) - 1);
+        if (['a', 'b', 'c', 'd', 'e', 'f'].includes(key))
+          selectByIndex(key.charCodeAt(0) - 'a'.charCodeAt(0));
       }
 
       if (e.key === 'Enter' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        await advance();
-        return;
+        const s = steps[stepIndex];
+        if (canAdvanceFromStep(s)) next();
       }
-
-      if (e.key === 'Escape' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        back();
-      }
+      if (e.key === 'Escape' || e.key === 'ArrowLeft') back();
     };
 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepIndex, steps, setValue, values]);
 
   // Query param ad
@@ -404,16 +375,47 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
     return () => b?.classList.remove('overflow-hidden');
   }, []);
 
+  const sentContactRef = useRef(false);
+
+  const sendContactToFFA = () => {
+    if (sentContactRef.current) return;
+    if (!isContactValid()) return;
+
+    sentContactRef.current = true;
+
+    fetch('/api/analytics/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: values.name,
+        email: values.email,
+        phone: `${values.codigoPais}${values.telefono}`.replace(/[\s\-().]/g, ''),
+        variant,
+        ad: values.ad,
+      }),
+    }).catch(() => {});
+  };
+
   // ------- Submit
   const onSubmit = async (data: FormValues) => {
-    const isSingleRequired = (s: ContactStep | SingleStep | TextStep): s is SingleStep =>
+    const isSingleRequired = (s: ContactStep | SingleStep | MultiStep | TextStep): s is SingleStep =>
       s.type === 'single' && s.required === true;
 
     const requiredIds = steps.filter(isSingleRequired).map((s) => s.id);
-
     const missing = requiredIds.find((id) => !data[id]);
+
+    const missingMulti = (['freno', 'intentos'] as MultiId[]).find(
+      (id) => (multiSelections[id]?.length ?? 0) === 0
+    );
+
     if (missing) {
       const idx = steps.findIndex((s) => s.type === 'single' && s.id === missing);
+      if (idx >= 0) setStepIndex(idx);
+      return;
+    }
+
+    if (missingMulti) {
+      const idx = steps.findIndex((s) => s.type === 'multi' && s.id === missingMulti);
       if (idx >= 0) setStepIndex(idx);
       return;
     }
@@ -421,45 +423,53 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
     try {
       setLoading(true);
 
-      // Enviar lead completo a n8n (test + prod)
-      try {
-        await fetch('https://n8n.srv953925.hstgr.cloud/webhook-test/08d3342b-fd5b-46e6-8b82-ecf363c041d7', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify([{ ...data, variant, leadId: leadIdRef.current }]),
-        });
-      } catch {}
-
-      try {
-        await fetch('https://n8n.srv953925.hstgr.cloud/webhook/08d3342b-fd5b-46e6-8b82-ecf363c041d7', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify([{ ...data, variant, leadId: leadIdRef.current }]),
-        });
-      } catch (err) {
-        console.log('Error enviando el Lead a n8n produccion:', err);
-      }
+      const normalizedPhone = `${data.codigoPais}${data.telefono}`.replace(/[\s\-().]/g, '');
 
       const isQualified =
         (data.presupuesto === 'presupuesto-intermedio' ||
           data.presupuesto === 'presupuesto-alto' ||
           data.presupuesto === 'presupuesto-muy-alto') &&
-        (data.edad === 'adulto' || data.edad === 'mayor');
+        parseInt(data.edad) >= 28 &&
+        data.compromiso90 === 'si' &&
+        (data.urgencia === 'urgencia-media' || data.urgencia === 'urgencia-alta' || data.urgencia === 'urgencia-muy-alta');
 
       localStorage.setItem('isQualified', isQualified ? 'true' : 'false');
       localStorage.setItem('name', data.name);
       localStorage.setItem('email', data.email);
       localStorage.setItem('phone', `${data.codigoPais}${data.telefono}`);
 
-      // ✅ fbp/fbc desde cookies (fuente real) + fallback
       const fbpCookie = getCookieValue('_fbp');
       const fbcCookie = getCookieValue('_fbc');
       const fbp = fbpCookie || localStorage.getItem('_fbp') || null;
       const fbc = fbcCookie || localStorage.getItem('_fbc') || null;
 
+      fetch('/api/analytics/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: normalizedPhone,
+          variant,
+          ad: data.ad,
+          edad: data.edad,
+          ocupacion: data.ocupacion,
+          compromiso90: data.compromiso90,
+          urgencia: data.urgencia,
+          objetivo: data.objetivo,
+          freno: data.freno,
+          intentos: data.intentos,
+          presupuesto: data.presupuesto,
+          fbp,
+          fbc,
+        }),
+      }).catch(() => {});
+
       if (isQualified) {
         const leadEventId = `lead-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
         localStorage.setItem('lead_event_id', leadEventId);
+        localStorage.removeItem('lead_fired');
+
         if (fbp) localStorage.setItem('_fbp', fbp);
         if (fbc) localStorage.setItem('_fbc', fbc);
 
@@ -511,10 +521,10 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
       type="button"
       onClick={onClick}
       className={`group w-full text-left rounded-xl border border-white/15 px-5 py-4 mb-3 bg-[#1a1a1a] hover:bg-[#232323] transition
-        ${selected ? 'ring-2 ring-[#0051ff] border-[#0051ff]/60' : ''}`}
+        ${selected ? 'ring-2 ring-[var(--primary)] border-[var(--primary)]/60' : ''}`}
     >
       <div className="flex items-center gap-3">
-        <span className="inline-flex items-center justify-center min-w-8 h-8 rounded-md bg-[#0051ff] text-white font-bold">
+        <span className="inline-flex items-center justify-center min-w-8 h-8 rounded-md bg-[var(--primary)] text-white font-bold">
           {LETTERS[index]}
         </span>
         <span className="text-white/90 leading-snug">{text}</span>
@@ -530,7 +540,10 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
   }, [stepIndex, totalSteps]);
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-4"
+      style={{ zIndex: 10000 }}
+    >
       <div
         ref={containerRef}
         className="w-full md:max-w-[720px] max-h-[calc(100vh-80px)] overflow-y-auto rounded-[20px] border border-white/10 bg-[#111] p-6 md:p-10 shadow-2xl"
@@ -546,7 +559,7 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
 
           <div className="h-[6px] w-full rounded-full bg-white/10 overflow-hidden">
             <div
-              className="h-full rounded-full bg-[#0051ff] transition-[width] duration-300 ease-out"
+              className="h-full rounded-full bg-[var(--primary)] transition-[width] duration-300 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -612,8 +625,12 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
                   />
                 </div>
 
-                {errors.codigoPais && <span className="text-red-400 text-xs">{errors.codigoPais.message}</span>}
-                {errors.telefono && <span className="text-red-400 text-xs">{errors.telefono.message}</span>}
+                {errors.codigoPais && (
+                  <span className="text-red-400 text-xs">{errors.codigoPais.message}</span>
+                )}
+                {errors.telefono && (
+                  <span className="text-red-400 text-xs">{errors.telefono.message}</span>
+                )}
               </div>
             </div>
           )}
@@ -635,17 +652,63 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
             </div>
           )}
 
+          {step.type === 'multi' && (
+            <div className="mt-2">
+              {step.options.map((op) => {
+                const selected = (multiSelections[step.id] ?? []).includes(op.value);
+                return (
+                  <button
+                    key={op.value}
+                    type="button"
+                    onClick={() => toggleMulti(step.id, op.value)}
+                    className={`w-full text-left rounded-xl border px-5 py-4 mb-3 bg-[#1a1a1a] hover:bg-[#232323] transition flex items-center gap-3
+                      ${selected ? 'ring-2 ring-[var(--primary)] border-[var(--primary)]/60' : 'border-white/15'}`}
+                  >
+                    <span className={`inline-flex items-center justify-center min-w-5 h-5 rounded border-2 transition
+                      ${selected ? 'bg-[var(--primary)] border-[var(--primary)]' : 'border-white/40'}`}>
+                      {selected && (
+                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                          <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </span>
+                    <span className="text-white/90 leading-snug">{op.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           {step.type === 'text' && (
             <div className="mt-4">
-              <textarea
-                data-autofocus
-                rows={5}
-                placeholder={step.placeholder}
-                {...register('objetivo', { required: step.required ? 'Este campo es obligatorio' : false })}
-                className="w-full rounded-xl bg-white text-[#111] px-4 py-3 outline-none resize-none"
-              />
+              {step.inputType === 'number' ? (
+                <input
+                  data-autofocus
+                  type="number"
+                  min="1"
+                  max="99"
+                  placeholder={step.placeholder}
+                  {...register('edad', { required: step.required ? 'Este campo es obligatorio' : false })}
+                  className="w-full rounded-xl bg-white text-[#111] px-4 py-3 outline-none"
+                />
+              ) : (
+                <textarea
+                  data-autofocus
+                  rows={5}
+                  placeholder={step.placeholder}
+                  {...register('objetivo', { required: step.required ? 'Este campo es obligatorio' : false })}
+                  className="w-full rounded-xl bg-white text-[#111] px-4 py-3 outline-none resize-none"
+                />
+              )}
+              {errors.edad && (
+                <span className="text-red-400 text-xs mt-1 block">
+                  {errors.edad.message as string}
+                </span>
+              )}
               {errors.objetivo && (
-                <span className="text-red-400 text-xs mt-1 block">{errors.objetivo.message as string}</span>
+                <span className="text-red-400 text-xs mt-1 block">
+                  {errors.objetivo.message as string}
+                </span>
               )}
             </div>
           )}
@@ -655,9 +718,15 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
           <div className="mt-6 flex items-center justify-between gap-3">
             <button
               type="button"
-              onClick={back}
+              onClick={() => {
+                if (stepIndex === 0) {
+                  onClose();
+                  return;
+                }
+                setStepIndex((i) => Math.max(0, i - 1));
+              }}
               className="px-4 py-3 rounded-lg border border-white/15 text-white/90 hover:bg-white/10 transition"
-              disabled={stepIndex === 0 || loading}
+              disabled={loading}
             >
               Atrás
             </button>
@@ -669,7 +738,17 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
             ) : (
               <button
                 type="button"
-                onClick={advance}
+                onClick={async () => {
+                  const s = steps[stepIndex];
+                  if (!canAdvanceFromStep(s)) return;
+
+                  if (s.type === 'contact') {
+                    sendContactToFFA();
+                    onContactReady?.(values.name, values.email, `${values.codigoPais}${values.telefono}`);
+                  }
+
+                  setStepIndex((i) => i + 1);
+                }}
                 className="cf-btn"
                 disabled={loading || !canAdvanceFromStep(step)}
               >
