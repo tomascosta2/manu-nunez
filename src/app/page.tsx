@@ -45,6 +45,11 @@ export default function Home() {
       weight: "-8kg en 3 meses",
       img: "/images/testimonios/testimonio-4.png",
     },
+    {
+      weight: "-12kg en 3 meses",
+      img: "/images/testimonios/testimonio-5.png",
+      name: "Andres",
+    },
   ];
 
   const altImgGeneric = "Manu Nuñez - Fit";
