@@ -70,9 +70,11 @@ type Props = {
 export default function CalendlyInline({ name, email, phone }: Props) {
   const [frameLoaded, setFrameLoaded] = useState(false);
 
+  const nameRef = useRef(name);
   const emailRef = useRef(email);
   const phoneRef = useRef(phone);
 
+  useEffect(() => { nameRef.current = name; }, [name]);
   useEffect(() => { emailRef.current = email; }, [email]);
   useEffect(() => { phoneRef.current = phone; }, [phone]);
 
@@ -113,16 +115,31 @@ export default function CalendlyInline({ name, email, phone }: Props) {
       if (!origin.endsWith("calendly.com")) return;
 
       if (e.data?.event === "calendly.event_scheduled") {
+        const currentName = nameRef.current;
         const currentEmail = emailRef.current;
         const currentPhone = phoneRef.current;
         const isLocalhost =
           window.location.hostname.includes("localhost") ||
           window.location.hostname.includes("127.0.0.1");
 
+        // Marcar agendo=Si en FFA (upsert por correo)
+        fetch("/api/analytics/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: currentName,
+            email: currentEmail,
+            phone: currentPhone,
+            agendo: "Si",
+          }),
+          keepalive: true,
+        }).catch((err) => console.error("[CalendlyInline] FFA error:", err));
+
         fetch(isLocalhost ? CALL_SHEDULED_TEST : CALL_SHEDULED, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: currentEmail, phone: currentPhone }),
+          keepalive: true,
         }).catch(() => {});
 
         const isQualified = localStorage.getItem("isQualified");
@@ -151,12 +168,13 @@ export default function CalendlyInline({ name, email, phone }: Props) {
               fbc,
               eventId,
             }),
+            keepalive: true,
           }).catch(() => {});
         }
 
         setTimeout(() => {
           window.location.href = "/pages/thankyou";
-        }, 600);
+        }, 4000);
       }
     };
 
