@@ -25,8 +25,8 @@ export default function Home() {
   const ctaText = "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!";
   const headlineText =
     variant === "A"
-      ? "Bajá entre 6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días con mi Método M90"
-      : "Bajá entre 6 y 15 kg de grasa corporal, recupera tu energía y tonificá en 90 días con mi Método M90";
+      ? "Bajá entre 6 y 15 kg de grasa corporal y tonificá en 90 días sin dietas extremas ni rutinas imposibles con el Método M90"
+      : "Bajá entre 6 y 15 kg de grasa corporal y tonificá en 90 días sin dietas extremas ni rutinas imposibles con el Método M90";
 
   const testimonials = [
     {
@@ -116,7 +116,7 @@ export default function Home() {
             <span>{headlineText}</span>
           </h1>
           <p className="text-white/80 text-center mt-2 max-w-[750px] mx-auto">
-            Sin dietas extremas ni rutinas imposibles.
+            El método que usan hombres con trabajos sedentarios para transformar su cuerpo sin cambiar su estilo de vida.
           </p>
 
           <section className="relative">
