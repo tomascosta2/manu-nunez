@@ -376,18 +376,8 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
     const requiredIds = steps.filter(isSingleRequired).map((s) => s.id);
     const missing = requiredIds.find((id) => !data[id]);
 
-    const missingMulti = (['freno', 'intentos'] as MultiId[]).find(
-      (id) => (multiSelections[id]?.length ?? 0) === 0
-    );
-
     if (missing) {
       const idx = steps.findIndex((s) => s.type === 'single' && s.id === missing);
-      if (idx >= 0) setStepIndex(idx);
-      return;
-    }
-
-    if (missingMulti) {
-      const idx = steps.findIndex((s) => s.type === 'multi' && s.id === missingMulti);
       if (idx >= 0) setStepIndex(idx);
       return;
     }
