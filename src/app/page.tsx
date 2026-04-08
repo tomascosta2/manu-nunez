@@ -26,7 +26,7 @@ export default function Home() {
   const headlineText =
     variant === "A"
       ? "Bajá entre 6 y 15 kg de grasa corporal y tonificá en 90 días sin dietas extremas ni rutinas imposibles con el Método M90"
-      : "Bajá entre 6 y 15 kg de grasa corporal y tonificá en 90 días sin dietas extremas ni rutinas imposibles con el Método M90";
+      : "Si sos un hombre con un trabajo sedentario te voy a ayudar a bajar de 5 a 15 kg en 3 meses O TE DEVUELVO LO INVERTIDO";
 
   const testimonials = [
     {
@@ -116,7 +116,9 @@ export default function Home() {
             <span>{headlineText}</span>
           </h1>
           <p className="text-white/80 text-center mt-2 max-w-[750px] mx-auto">
-            El método que usan hombres con trabajos sedentarios para transformar su cuerpo sin cambiar su estilo de vida.
+            {variant === "B"
+              ? "(Sin dietas extremas y de forma natural)"
+              : "El método que usan hombres con trabajos sedentarios para transformar su cuerpo sin cambiar su estilo de vida."}
           </p>
 
           <section className="relative">
@@ -168,7 +170,7 @@ export default function Home() {
         <div className="bg-[var(--primary)]/80 size-[600px] rounded-full right-[-400px] absolute -z-50 blur-[200px] -bottom-[300px]"></div>
       </section>
 
-      {variant === "A" && <section className="w-full bg-[#000] relative pt-[80px] md:pt-[160px] pb-[60px] md:pb-[90px]">
+      <section className="w-full bg-[#000] relative pt-[80px] md:pt-[160px] pb-[60px] md:pb-[90px]">
         <div className="h-[2px] top-0 absolute overflow-clip w-full z-50 hidden md:block">
           <div className="size-[400px] blur-[200px] left-[calc(50%-200px)] -top-[200px] absolute bg-[var(--primary)]"></div>
         </div>
@@ -237,7 +239,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>}
+      </section>
 
       <p className="pb-6 pt-8 text-[14px] text-center px-4 text-white/60">
         © Manu Nuñez 2025. Todos los derechos reservados.
