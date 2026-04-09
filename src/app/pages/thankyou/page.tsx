@@ -232,6 +232,17 @@ export default function ThankYou() {
         </a>
         <p className="text-red-500 text-[14px] text-center mt-2">En caso de no confirmar, tu llamada va a ser cancelada</p>
 
+        {/* ¿Cómo funciona el método? */}
+        <h3 className="text-center text-black text-[24px] leading-[115%] font-bold mb-6 mt-10">
+          ¿Cómo funciona el método?
+        </h3>
+        <iframe
+          className="w-full aspect-video"
+          id="panda-069e112f-6e84-4b51-819b-379c77bc03b5"
+          src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5"
+          allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+        ></iframe>
+
         {/* FAQ (desplazada hacia abajo) */}
         <h3 className="text-center text-black text-[24px] leading-[115%] font-bold mb-6 mt-10">
           Preguntas frecuentes
@@ -272,26 +283,25 @@ export default function ThankYou() {
         </Accordion>
 
         {/* Social proof compacto arriba del fold */}
-        {/* <div className="grid md:grid-cols-3 gap-4 mt-8">
+        <div className="grid md:grid-cols-3 gap-4 mt-8">
           {[
+            { txt: "-6 KG en 3 Meses", img: "/images/testimonios/testimonio-1.png" },
             { txt: "-10 KG en 3 Meses", img: "/images/testimonios/testimonio-2.png" },
             { txt: "-8 KG en 3 Meses", img: "/images/testimonios/testimonio-3.png" },
             { txt: "-8 KG en 3 Meses", img: "/images/testimonios/testimonio-4.png" },
+            { txt: "-12 KG en 3 Meses", img: "/images/testimonios/testimonio-5.png" },
           ].map((t, i) => (
             <div key={i}>
               <p className="text-center py-2 bg-[#0051ff] text-white font-semibold">{t.txt}</p>
-              <img className="w-full h-[260px] object-cover" src={t.img} alt={`Cambio ${i+1}`} />
+              <img className="w-full h-[260px] object-cover" src={t.img} alt={`Cambio ${i + 1}`} />
             </div>
           ))}
-        </div> */}
+        </div>
 
         {/* Checklist de compromiso */}
-        {/* <div className="rounded-xl border p-4 bg-white mt-8">
+        <div className="rounded-xl border p-4 bg-white mt-8">
           <p className="font-semibold text-[18px] mb-2 text-black">
             Marcá los 3 pasos para confirmar tu lugar:
-          </p>
-          <p className="text-[14px] text-black/80 mb-4">
-            Esto nos ayuda a asegurarnos de que solo personas realmente comprometidas ocupen los cupos limitados.
           </p>
           <label className="flex items-start gap-3 text-[16px] text-black mb-2">
             <input type="checkbox" className="mt-1" checked={agreeQuietPlace} onChange={e => setAgreeQuietPlace(e.target.checked)} />
@@ -305,7 +315,7 @@ export default function ThankYou() {
             <input type="checkbox" className="mt-1" checked={agreeNoReschedule} onChange={e => setAgreeNoReschedule(e.target.checked)} />
             <span>Si no puedo asistir, reprogramo con anticipación para liberar el lugar.</span>
           </label>
-        </div> */}
+        </div>
 
         {/* CTA repetido al final */}
         <a
