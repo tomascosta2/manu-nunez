@@ -184,10 +184,6 @@ export default function ThankYou() {
         src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=1de861f0-5f8b-45d4-ba82-18bd332f961a"  
         allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"></iframe>
 
-        {/* Título + countdown */}
-        <h1 className="text-[26px] text-black font-bold leading-[115%] mb-2">
-          {name ? `¡${name},` : "¡Genial,"} ya casi estamos! Solo falta confirmar.
-        </h1>
         {startAt && (
           <p className="text-[16px] text-black/80 mb-4">
             Tu reunión está programada para:{" "}
