@@ -30,10 +30,6 @@ export default function Home() {
 
   const testimonials = [
     {
-      weight: "-6kg en 3 meses",
-      img: "/images/testimonios/testimonio-1.png",
-    },
-    {
       weight: "-10kg en 3 meses",
       img: "/images/testimonios/testimonio-2.png",
     },

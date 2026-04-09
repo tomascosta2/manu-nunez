@@ -285,7 +285,6 @@ export default function ThankYou() {
         {/* Social proof compacto arriba del fold */}
         <div className="grid md:grid-cols-3 gap-4 mt-8">
           {[
-            { txt: "-6 KG en 3 Meses", img: "/images/testimonios/testimonio-1.png" },
             { txt: "-10 KG en 3 Meses", img: "/images/testimonios/testimonio-2.png" },
             { txt: "-8 KG en 3 Meses", img: "/images/testimonios/testimonio-3.png" },
             { txt: "-8 KG en 3 Meses", img: "/images/testimonios/testimonio-4.png" },
