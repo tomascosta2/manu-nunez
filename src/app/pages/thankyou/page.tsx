@@ -197,12 +197,9 @@ export default function ThankYou() {
         )}
 
         {/* Checklist de compromiso */}
-        <div className="rounded-xl border p-4 bg-white mb-4">
+        <div className="rounded-xl border border-[#111]/20 p-4 bg-white mb-4">
           <p className="font-semibold text-[18px] mb-2 text-black">
             Marcá los 3 pasos para confirmar tu lugar:
-          </p>
-          <p className="text-[14px] text-black/80 mb-4">
-            PD: Si no tenes suficiente compromiso para hablar por whatsapp, confirmar tu asistencia y contarme un poco más sobre vos, probablemente no seas el mejor candidato para el programa. No queremos que ocupes un cupo si no estás 100% comprometido con tu cambio.
           </p>
           <label className="flex items-start gap-3 text-[16px] text-black mb-2">
             <input type="checkbox" className="mt-1" checked={agreeQuietPlace} onChange={e => setAgreeQuietPlace(e.target.checked)} />
@@ -298,7 +295,7 @@ export default function ThankYou() {
         </div>
 
         {/* Checklist de compromiso */}
-        <div className="rounded-xl border p-4 bg-white mt-8">
+        <div className="rounded-xl border border-[#111]/20 p-4 bg-white mt-8">
           <p className="font-semibold text-[18px] mb-2 text-black">
             Marcá los 3 pasos para confirmar tu lugar:
           </p>
