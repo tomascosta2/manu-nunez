@@ -258,13 +258,11 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
         type: 'single' as const,
         id: 'presupuesto' as const,
         required: true,
-        title: '¿Podrías destinar al menos 250 USD al mes para tu proceso de transformación física si vemos que el programa es adecuado para vos? (3 meses)',
-        subtitle:
-          'Nuestro programa es un acompañamiento profesional completo y requiere una inversión mensual acorde al nivel de soporte del equipo. Para asegurarnos de que la llamada tenga sentido para vos y para nosotros, necesitamos confirmar lo siguiente.',
+        title: 'En caso de ser aceptado y sabiendo que es un servicio integral de 3 meses ¿Cuanto estas dispuesto a invertir en vos, tu salud y tu fisico y ser acompañado ayudandote a lograr tus objetivos de forma garantizada?*',
         options: [
-          { value: 'presupuesto-alto', label: 'Sí, quiero asegurar mi cambio.' },
-          { value: 'presupuesto-intermedio', label: 'Sí, pero primero necesito ver cómo es el servicio.' },
-          { value: 'presupuesto-bajo', label: 'No en este momento.' },
+          { value: 'presupuesto-bajo', label: 'Menos de 400 USD' },
+          { value: 'presupuesto-intermedio', label: 'Entre 400 y 850 USD' },
+          { value: 'presupuesto-alto', label: 'Entre 850 y 1.200 USD' },
         ],
       },
     ],
