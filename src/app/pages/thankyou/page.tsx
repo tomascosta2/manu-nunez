@@ -179,9 +179,9 @@ export default function ThankYou() {
           <span><strong>¡Último paso!</strong> Confirmá y agendá para no perder tu cupo.</span>
         </p>
 
-        <iframe className="w-full aspect-video my-4"  
-        id="panda-1de861f0-5f8b-45d4-ba82-18bd332f961a" 
-        src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=1de861f0-5f8b-45d4-ba82-18bd332f961a"  
+        <iframe className="w-full aspect-video my-4"
+        id="panda-1de861f0-5f8b-45d4-ba82-18bd332f961a"
+        src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=1de861f0-5f8b-45d4-ba82-18bd332f961a"
         allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"></iframe>
 
         {startAt && (
@@ -234,6 +234,17 @@ export default function ThankYou() {
           id="panda-069e112f-6e84-4b51-819b-379c77bc03b5"
           src="https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5"
           allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+        ></iframe>
+
+        {/* Mensaje de Manu (Loom) */}
+        <h3 className="text-center text-black text-[24px] leading-[115%] font-bold mb-6 mt-10">
+          Mensaje de Manu
+        </h3>
+        <iframe
+          className="w-full aspect-video rounded-lg"
+          src="https://www.loom.com/embed/ad79b71777f3410d9cea358340dc7e24"
+          allow="autoplay; fullscreen"
+          allowFullScreen
         ></iframe>
 
         {/* FAQ (desplazada hacia abajo) */}
