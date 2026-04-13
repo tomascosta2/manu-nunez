@@ -24,9 +24,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const variantRef = useRef<"A" | "B">(Math.random() < 0.5 ? "A" : "B");
-  const variant = variantRef.current;
-  console.log(variant);
+  const variant = "A";
 
   const ctaText = "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!";
   const headlineText =
