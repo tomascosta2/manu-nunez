@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 type Props = {
   variant: 'A' | 'B';
@@ -285,7 +286,7 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
   const isContactValid = () => {
     const isNameValid = values.name.trim().length > 1;
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
-    const isPhoneValid = values.telefono.trim().length > 5 && !!values.codigoPais;
+    const isPhoneValid = !!values.codigoPais && isValidPhoneNumber(`${values.codigoPais}${values.telefono.trim()}`);
     return isNameValid && isEmailValid && isPhoneValid;
   };
 
@@ -406,6 +407,7 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
       fetch('/api/analytics/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
         body: JSON.stringify({
           name: data.name,
           email: data.email,
