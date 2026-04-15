@@ -24,7 +24,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const variant = "A";
+  const variant = "A" as "A" | "B";
 
   const ctaText = "¡AGENDAR MI SESIÓN DE DIAGNÓSTICO!";
   const headlineText =
