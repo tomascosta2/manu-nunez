@@ -65,9 +65,12 @@ type Props = {
   name: string;
   email: string;
   phone: string;
+  urgentHeadline?: string;
+  pdText?: string;
+  calendlyUrl?: string;
 };
 
-export default function CalendlyInline({ name, email, phone }: Props) {
+export default function CalendlyInline({ name, email, phone, urgentHeadline, pdText, calendlyUrl: calendlyUrlOverride }: Props) {
   const [frameLoaded, setFrameLoaded] = useState(false);
 
   const nameRef = useRef(name);
@@ -186,17 +189,19 @@ export default function CalendlyInline({ name, email, phone }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const calendlyUrl = useMemo(() => {
     const domain = typeof window !== "undefined" ? window.location.hostname : "localhost";
-    return `${CALENDLY_URL}?hide_gdpr_banner=1&embed_type=InlineWidget&embed_domain=${domain}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+    const base = calendlyUrlOverride || CALENDLY_URL;
+    return `${base}?hide_gdpr_banner=1&embed_type=InlineWidget&embed_domain=${domain}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
   }, []);
 
   return (
     <main>
       <section className="pt-8 pb-[80px]">
         <div className="max-w-[1200px] mx-auto px-4">
-          <h1 className="text-[24px] md:text-[32px] font-bold leading-[120%] max-w-[800px] mb-8 mx-auto text-center">
-            <span className="text-[#0051ff]">¡Último paso!</span> Elegí una fecha
-            y hora que te queden cómodas y empezá hoy mismo!
-          </h1>
+          {urgentHeadline && (
+            <h1 className="text-[24px] md:text-[32px] font-bold leading-[120%] max-w-[800px] mb-8 mx-auto text-center">
+              {urgentHeadline}
+            </h1>
+          )}
 
           <div className="gap-8">
             <div className="bg-white w-full min-h-[600px] rounded-lg overflow-clip relative">

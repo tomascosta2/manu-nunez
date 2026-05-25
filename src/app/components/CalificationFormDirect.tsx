@@ -4,11 +4,30 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 
+export type FormLabelsResolved = {
+  nameLabel?: string;
+  namePlaceholder?: string;
+  emailLabel?: string;
+  emailPlaceholder?: string;
+  phoneLabel?: string;
+  countryPlaceholder?: string;
+  numberPlaceholder?: string;
+  phoneInvalidMessage?: string;
+  phoneInvalidHint?: string;
+  objectiveTip?: string;
+  backButton?: string;
+  nextButton?: string;
+  loadingButton?: string;
+  submitButton?: string;
+};
+
 type Props = {
   variant: 'A' | 'B';
   onClose: () => void;
   onContactReady?: (name: string, email: string, phone: string) => void;
   onCalendly?: () => void;
+  questions?: unknown[];
+  labels?: FormLabelsResolved;
 };
 type Opcion = { value: string; label: string };
 
@@ -143,7 +162,23 @@ const ensureFbcFromFbclid = () => {
   } catch {}
 };
 
-export default function CalificationFormDirect({ variant, onClose, onContactReady, onCalendly }: Props) {
+export default function CalificationFormDirect({ variant, onClose, onContactReady, onCalendly, labels = {} }: Props) {
+  const L = {
+    nameLabel: labels.nameLabel ?? "Nombre",
+    namePlaceholder: labels.namePlaceholder ?? "Tu Nombre Completo",
+    emailLabel: labels.emailLabel ?? "Correo electrónico",
+    emailPlaceholder: labels.emailPlaceholder ?? "tu@email.com",
+    phoneLabel: labels.phoneLabel ?? "Número de teléfono",
+    countryPlaceholder: labels.countryPlaceholder ?? "País",
+    numberPlaceholder: labels.numberPlaceholder ?? "Número",
+    phoneInvalidMessage: labels.phoneInvalidMessage ?? "El número no parece válido",
+    phoneInvalidHint: labels.phoneInvalidHint ?? "Verificá que sea tu número sin el 0, sin el 15 y sin repetir el código de país. Ej: 1155667788",
+    objectiveTip: labels.objectiveTip ?? 'Tip: si nos contás el "por qué", podemos ayudarte mucho mejor en la llamada.',
+    backButton: labels.backButton ?? "Atrás",
+    nextButton: labels.nextButton ?? "Continuar",
+    loadingButton: labels.loadingButton ?? "Cargando...",
+    submitButton: labels.submitButton ?? "Aceptar y Agendar",
+  };
   const {
     register,
     handleSubmit,
@@ -536,11 +571,11 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
           {step.type === 'contact' && (
             <div className="space-y-5">
               <label className="block">
-                <span className="text-white text-sm">Nombre</span>
+                <span className="text-white text-sm">{L.nameLabel}</span>
                 <input
                   data-autofocus
                   type="text"
-                  placeholder="Tu Nombre Completo"
+                  placeholder={L.namePlaceholder}
                   {...register('name', { required: 'Campo requerido' })}
                   className="mt-2 w-full rounded-lg bg-white text-[#111] px-4 py-3 outline-none"
                 />
@@ -548,10 +583,10 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
               </label>
 
               <label className="block">
-                <span className="text-white text-sm">Correo electrónico</span>
+                <span className="text-white text-sm">{L.emailLabel}</span>
                 <input
                   type="email"
-                  placeholder="tu@email.com"
+                  placeholder={L.emailPlaceholder}
                   {...register('email', { required: 'Campo requerido' })}
                   className="mt-2 w-full rounded-lg bg-white text-[#111] px-4 py-3 outline-none"
                 />
@@ -559,7 +594,7 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
               </label>
 
               <div>
-                <span className="text-white text-sm">Número de teléfono</span>
+                <span className="text-white text-sm">{L.phoneLabel}</span>
                 <div className="mt-2 flex gap-2">
                   <select
                     {...register('codigoPais', { required: 'Campo requerido' })}
@@ -567,7 +602,7 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
                     defaultValue=""
                   >
                     <option value="" disabled>
-                      País
+                      {L.countryPlaceholder}
                     </option>
                     {PAISES.map((p) => (
                       <option key={p.code} value={p.code}>
@@ -578,7 +613,7 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
 
                   <input
                     type="tel"
-                    placeholder="Número"
+                    placeholder={L.numberPlaceholder}
                     {...register('telefono', {
                       required: 'Campo requerido',
                       pattern: { value: /^[0-9\s\-]+$/, message: 'Formato de teléfono inválido' },
@@ -595,8 +630,8 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
                 )}
                 {values.telefono.trim().length > 3 && values.codigoPais && !isValidPhoneNumber(`${values.codigoPais}${values.telefono.trim()}`) && (
                   <div className="mt-2 bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2">
-                    <p className="text-amber-400 text-xs font-semibold">El número no parece válido</p>
-                    <p className="text-amber-400/70 text-xs mt-0.5">Verificá que sea tu número sin el 0, sin el 15 y sin repetir el código de país. Ej: 1155667788</p>
+                    <p className="text-amber-400 text-xs font-semibold">{L.phoneInvalidMessage}</p>
+                    <p className="text-amber-400/70 text-xs mt-0.5">{L.phoneInvalidHint}</p>
                   </div>
                 )}
               </div>
@@ -696,12 +731,12 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
               className="px-4 py-3 rounded-lg border border-white/15 text-white/90 hover:bg-white/10 transition"
               disabled={loading}
             >
-              Atrás
+              {L.backButton}
             </button>
 
             {isLast ? (
               <button type="submit" className="cf-btn" disabled={loading || !canAdvanceFromStep(step)}>
-                {loading ? 'Cargando...' : 'Aceptar y Agendar'}
+                {loading ? L.loadingButton : L.submitButton}
               </button>
             ) : (
               <button
@@ -720,7 +755,7 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
                 className="cf-btn"
                 disabled={loading || !canAdvanceFromStep(step)}
               >
-                Continuar
+                {L.nextButton}
                 {!loading && (
                   <svg
                     width="13"
