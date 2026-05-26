@@ -1,20 +1,26 @@
-// src/app/api/track/qualified-shedule/route.ts
 import { NextResponse } from 'next/server';
+import { getContent } from '@/lib/content';
 
 export async function POST(req: Request) {
   const data = await req.json();
 
-  console.log("Data", data)
-
   if (!data.email || !data.phone) {
     return NextResponse.json({ success: false, error: "Faltan email o phone" }, { status: 400 });
+  }
+
+  const content = await getContent();
+  const pixelId = (content.siteConfig?.pixelId ?? '').replace(/[^0-9]/g, '');
+  const accessToken = content.siteConfig?.metaCapiToken || process.env.API_ACCESS_TOKEN;
+  const testCode = content.siteConfig?.metaCapiTestCode || undefined;
+  if (!pixelId || !accessToken) {
+    return NextResponse.json({ success: true, skipped: 'no_pixel_or_token' });
   }
 
   const hashEmail = await hashSHA256(data.email);
   const hashPhone = await hashSHA256(data.phone);
 
   const response = await fetch(
-    `https://graph.facebook.com/v22.0/1391736115664543/events?access_token=${process.env.API_ACCESS_TOKEN}`,
+    `https://graph.facebook.com/v22.0/${pixelId}/events?access_token=${accessToken}`,
     {
       method: 'POST',
       headers: {
@@ -32,18 +38,18 @@ export async function POST(req: Request) {
               ph: [hashPhone],
               fbp: data.fbp,
               fbc: data.fbc,
-              client_user_agent: req.headers.get('user-agent'),
-              client_ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),
+              client_user_agent: req.headers.get('user-agent') ?? '',
+              client_ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '',
             },
           },
         ],
-        //test_event_code: 'TEST3573'
+        ...(testCode ? { test_event_code: testCode } : {}),
       }),
     }
   );
 
   const result = await response.json();
-  console.log("RESPONSE FROM META:", result);
+  console.log("[track/schedule] Meta response:", result);
 
   return NextResponse.json({ success: true, result });
 }

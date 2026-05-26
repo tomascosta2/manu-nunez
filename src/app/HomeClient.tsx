@@ -67,9 +67,11 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
   const resultsCalloutText = pickVariant(data.homeSections?.resultsCalloutText, variant, isTestActive(activeTestId, "homeSections.resultsCalloutText")) || "";
   const testimonialsCta = pickVariant(data.homeSections?.testimonialsCta, variant, isTestActive(activeTestId, "homeSections.testimonialsCta")) || heroCta;
   const testimonialsCtaSubtext = pickVariant(data.homeSections?.testimonialsCtaSubtext, variant, isTestActive(activeTestId, "homeSections.testimonialsCtaSubtext")) || "";
-  const footerBrand = pickVariant(data.footer?.brandLine, variant, isTestActive(activeTestId, "footer.brandLine")) || "";
-  const footerCopyrightTpl = pickVariant(data.footer?.copyright, variant, isTestActive(activeTestId, "footer.copyright")) || "";
-  const footerMetaDisclaimer = pickVariant(data.footer?.metaDisclaimer, variant, isTestActive(activeTestId, "footer.metaDisclaimer")) || "";
+  // Footer: si los campos están vacíos (cliente los borró por error o nunca los guardó),
+  // mostramos un fallback razonable para que el footer NUNCA quede sin disclaimer legal.
+  const footerBrand = pickVariant(data.footer?.brandLine, variant, isTestActive(activeTestId, "footer.brandLine")) || "Manu Nuñez Fit";
+  const footerCopyrightTpl = pickVariant(data.footer?.copyright, variant, isTestActive(activeTestId, "footer.copyright")) || "© Manu Nuñez {year}. Todos los derechos reservados.";
+  const footerMetaDisclaimer = pickVariant(data.footer?.metaDisclaimer, variant, isTestActive(activeTestId, "footer.metaDisclaimer")) || "Este sitio no forma parte ni está avalado por Meta (Facebook o Instagram). Facebook e Instagram son marcas registradas de Meta Platforms, Inc.";
   const calendlyUrgentHeadline = pickVariant(data.calendlyPage?.urgentHeadline, variant, isTestActive(activeTestId, "calendlyPage.urgentHeadline")) || "";
   const calendlyPdText = pickVariant(data.calendlyPage?.pdText, variant, isTestActive(activeTestId, "calendlyPage.pdText")) || "";
 
@@ -91,10 +93,20 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
     submitButton: pickVariant(fl?.submitButton, variant, isTestActive(activeTestId, "formLabels.submitButton")) || undefined,
   };
 
-  const TESTIMONIALS = (data.resultGallery ?? []).map((r) => ({
-    weight: r.weight ?? "",
-    img: r.afterImageUrl || r.beforeImageUrl || r.imageUrl || "/images/placeholder.svg",
-  }));
+  const TESTIMONIALS = (data.resultGallery ?? []).map((r) => {
+    const before = r.beforeImageUrl || "";
+    const after = r.afterImageUrl || "";
+    const hasPair = !!(before && after);
+    const single = !hasPair ? (after || before || r.imageUrl || "/images/placeholder.svg") : null;
+    return {
+      weight: r.weight ?? "",
+      before,
+      after,
+      hasPair,
+      single,
+      img: after || before || r.imageUrl || "/images/placeholder.svg",
+    };
+  });
 
   const altImgGeneric = "Manu Nuñez - Fit";
 
@@ -254,14 +266,39 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
                           {testimonial.weight}
                         </p>
 
-                        <div className="relative flex-1 overflow-clip rounded-[10px]">
-                          <div className="absolute inset-0 rounded-[10px] bg-gradient-to-t from-black/90 from-5% to-transparent to-65%" />
-                          <img
-                            className="w-full h-full object-cover rounded-[10px]"
-                            src={testimonial.img}
-                            alt={`${altImgGeneric} cambio ${i + 1}`}
-                          />
-                        </div>
+                        {testimonial.hasPair ? (
+                          <div className="relative flex-1 overflow-clip rounded-[10px] grid grid-cols-2 gap-[2px]">
+                            <div className="relative">
+                              <img
+                                className="w-full h-full object-cover"
+                                src={testimonial.before}
+                                alt={`${altImgGeneric} antes ${i + 1}`}
+                              />
+                              <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wider bg-black/70 text-white px-2 py-0.5 rounded">
+                                Antes
+                              </span>
+                            </div>
+                            <div className="relative">
+                              <img
+                                className="w-full h-full object-cover"
+                                src={testimonial.after}
+                                alt={`${altImgGeneric} después ${i + 1}`}
+                              />
+                              <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wider bg-[var(--primary)] text-white px-2 py-0.5 rounded">
+                                Después
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="relative flex-1 overflow-clip rounded-[10px]">
+                            <div className="absolute inset-0 rounded-[10px] bg-gradient-to-t from-black/90 from-5% to-transparent to-65%" />
+                            <img
+                              className="w-full h-full object-cover rounded-[10px]"
+                              src={testimonial.single ?? testimonial.img}
+                              alt={`${altImgGeneric} cambio ${i + 1}`}
+                            />
+                          </div>
+                        )}
                       </div>
                     ))}
 

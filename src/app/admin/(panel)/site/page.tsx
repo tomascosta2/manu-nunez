@@ -123,6 +123,40 @@ export default function SitePage() {
           </div>
         </div>
       </Card>
+
+      <Card>
+        <h3 className="font-semibold text-neutral-900 mb-1">Meta Conversions API (CAPI)</h3>
+        <p className="text-[12px] text-neutral-500 mb-4">
+          Token de acceso para enviar eventos Lead y Schedule directo desde el servidor a Meta.
+          Generalo en Events Manager → tu Pixel → Configuración → Token de acceso.
+        </p>
+        <div className="space-y-5">
+          <FieldWithError
+            label="Token de la API de Conversiones"
+            hint="String largo (~200 chars). Empieza con EAA… Dejalo vacío si no usás CAPI."
+          >
+            <input
+              type="password"
+              className={inputClass}
+              value={sc.metaCapiToken ?? ""}
+              onChange={(e) => update({ metaCapiToken: e.target.value })}
+              placeholder="EAA…"
+              autoComplete="off"
+            />
+          </FieldWithError>
+          <FieldWithError
+            label="Test Event Code (opcional)"
+            hint="Ej: TEST12345. Lo usás para ver los eventos en Test Events de Meta antes de pasar a producción. Vacío en producción."
+          >
+            <input
+              className={inputClass}
+              value={sc.metaCapiTestCode ?? ""}
+              onChange={(e) => update({ metaCapiTestCode: e.target.value })}
+              placeholder="TEST12345"
+            />
+          </FieldWithError>
+        </div>
+      </Card>
     </div>
   );
 }

@@ -16,6 +16,8 @@ export type SiteConfig = {
   calendlyUrl?: string;
   pixelId?: string;
   hotjarId?: string;
+  metaCapiToken?: string;
+  metaCapiTestCode?: string;
 };
 
 export type Hero = {
@@ -280,7 +282,7 @@ export const DEFAULT_CONTENT: Content = {
   siteConfig: {
     whatsappNumber: "5492216720769",
     calendlyUrl: "https://calendly.com/sarlomanuel33/30min",
-    pixelId: "",
+    pixelId: "1391736115664543",
     hotjarId: "",
   },
   hero: {
