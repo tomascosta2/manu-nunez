@@ -199,8 +199,8 @@ function DesktopSidebar() {
     <aside className="hidden md:flex md:fixed md:inset-y-0 md:left-0 md:w-[240px] flex-col bg-white border-r border-neutral-200">
       <div className="px-5 py-5 border-b border-neutral-200">
         <p className="text-[11px] text-neutral-400 tracking-[0.2em] uppercase">Admin</p>
-        <p className="text-[15px] font-bold text-neutral-900 mt-1">Mathías Guevara</p>
-        <p className="text-[12px] text-neutral-500 mt-0.5">Impulso Profesional</p>
+        <p className="text-[15px] font-bold text-neutral-900 mt-1">Manuel Núñez</p>
+        <p className="text-[12px] text-neutral-500 mt-0.5">Método M90</p>
       </div>
       <NavLinks />
       <SidebarFooter />
@@ -236,8 +236,8 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         <div className="px-5 py-5 border-b border-neutral-200 flex items-start justify-between">
           <div>
             <p className="text-[11px] text-neutral-400 tracking-[0.2em] uppercase">Admin</p>
-            <p className="text-[15px] font-bold text-neutral-900 mt-1">Mathías Guevara</p>
-            <p className="text-[12px] text-neutral-500 mt-0.5">Impulso Profesional</p>
+            <p className="text-[15px] font-bold text-neutral-900 mt-1">Manuel Núñez</p>
+            <p className="text-[12px] text-neutral-500 mt-0.5">Método M90</p>
           </div>
           <button
             onClick={onClose}

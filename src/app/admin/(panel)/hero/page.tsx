@@ -74,7 +74,7 @@ export default function HeroPage() {
           <ABInput
             testId="hero.description"
             label="Descripción debajo del headline"
-            hint='Texto chico que aparece debajo del headline. Ej: "Con mi Método Impulso Profesional — Sin Dietas Extremas ni Rutinas Imposibles."'
+            hint='Texto chico que aparece debajo del headline. Ej: "Con mi Método M90 — Sin Dietas Extremas ni Rutinas Imposibles."'
             value={content.hero?.description}
             onChange={(description) => update({ description })}
             multiline

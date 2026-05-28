@@ -180,7 +180,7 @@ const DEFAULT_PRIVACY = `# Política de Privacidad
 
 **Última actualización:** ${new Date().getFullYear()}
 
-En Mathías Guevara — Método Impulso Profesional ("nosotros", "nuestro"), respetamos tu privacidad y nos comprometemos a proteger los datos personales que compartís con nosotros. Esta política describe qué información recolectamos, cómo la usamos y qué derechos tenés sobre ella.
+En Manuel Núñez — Método M90 ("nosotros", "nuestro"), respetamos tu privacidad y nos comprometemos a proteger los datos personales que compartís con nosotros. Esta política describe qué información recolectamos, cómo la usamos y qué derechos tenés sobre ella.
 
 ## 1. Información que recolectamos
 
@@ -229,11 +229,11 @@ const DEFAULT_TERMS = `# Términos y Condiciones
 
 **Última actualización:** ${new Date().getFullYear()}
 
-Al utilizar este sitio y/o aplicar al Método Impulso Profesional aceptás los siguientes términos.
+Al utilizar este sitio y/o aplicar al Método M90 aceptás los siguientes términos.
 
 ## 1. Servicio
 
-El Método Impulso Profesional es un servicio de coaching deportivo y nutricional 1-a-1, ofrecido de forma 100% online por Mathías Guevara. La duración estándar del programa es de 3 meses.
+El Método M90 es un servicio de coaching deportivo y nutricional 1-a-1, ofrecido de forma 100% online por Manuel Núñez. La duración estándar del programa es de 3 meses.
 
 ## 2. Aplicación y aceptación
 

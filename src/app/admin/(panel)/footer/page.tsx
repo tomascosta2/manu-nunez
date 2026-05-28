@@ -19,7 +19,7 @@ export default function FooterAdminPage() {
           <ABInput
             testId="footer.brandLine"
             label="Línea de marca"
-            hint='Ej: "Mathias Guevara · Método Impulso Profesional".'
+            hint='Ej: "Manuel Núñez · Método M90".'
             value={content.footer?.brandLine}
             onChange={(brandLine) => update({ brandLine })}
           />

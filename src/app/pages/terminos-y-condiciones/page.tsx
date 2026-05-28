@@ -4,8 +4,8 @@ import { LegalPage } from "../legal/LegalPage";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Términos y Condiciones — Mathías Guevara",
-  description: "Términos y condiciones de uso del sitio y servicios de Mathías Guevara — Método Impulso Profesional.",
+  title: "Términos y Condiciones — Manuel Núñez",
+  description: "Términos y condiciones de uso del sitio y servicios de Manuel Núñez — Método M90.",
 };
 
 export default async function TermsPage() {
