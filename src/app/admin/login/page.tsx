@@ -35,7 +35,7 @@ export default function LoginPage() {
         className="w-full max-w-sm bg-white border border-neutral-200 rounded-2xl shadow-sm p-8 space-y-5"
       >
         <div>
-          <h1 className="text-xl font-bold text-neutral-900">Admin · Mathias Guevara</h1>
+          <h1 className="text-xl font-bold text-neutral-900">Admin · Manuel Núñez</h1>
           <p className="text-neutral-600 text-sm mt-1">Ingresá tu password para editar el funnel.</p>
         </div>
         <div className="space-y-2">
