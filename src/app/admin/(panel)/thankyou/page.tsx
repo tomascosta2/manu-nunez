@@ -53,17 +53,30 @@ export default function ThankyouPage() {
           />
           <ABInput
             testId="thankyouPage.videoEmbedUrl"
-            label="URL del video (Panda / Wistia / YouTube)"
-            hint='Pegá la URL completa del iframe embed. Si lo dejás vacío, no se muestra el video. Ej: https://player-vz-….tv.pandavideo.com/embed/?v=ID o https://www.youtube.com/embed/ID'
+            label="URL del video de bienvenida / gracias"
+            hint='Aparece arriba, entre el subtítulo y el checklist. Pegá la URL completa del iframe embed. Si lo dejás vacío, no se muestra. Ej: https://player-vz-….tv.pandavideo.com/embed/?v=ID o https://www.youtube.com/embed/ID'
             value={content.thankyouPage?.videoEmbedUrl}
             onChange={(videoEmbedUrl) => update({ videoEmbedUrl })}
           />
+        </div>
+      </Card>
+
+      <Card>
+        <h3 className="font-semibold text-neutral-900 mb-4">Segunda sección: video del método</h3>
+        <div className="space-y-5">
           <ABInput
-            testId="thankyouPage.videoSectionHeading"
-            label="Título de la sección del video"
+            testId="thankyouPage.methodVideoEmbedUrl"
+            label='URL del video "¿Cómo funciona el método?"'
+            hint='Aparece como sección separada, después del CTA principal. Si lo dejás vacío, no se muestra. Pegá la URL completa del iframe embed.'
+            value={content.thankyouPage?.methodVideoEmbedUrl}
+            onChange={(methodVideoEmbedUrl) => update({ methodVideoEmbedUrl })}
+          />
+          <ABInput
+            testId="thankyouPage.methodVideoHeading"
+            label="Título de la segunda sección"
             hint='Ej: "¿Cómo funciona el método?"'
-            value={content.thankyouPage?.videoSectionHeading}
-            onChange={(videoSectionHeading) => update({ videoSectionHeading })}
+            value={content.thankyouPage?.methodVideoHeading}
+            onChange={(methodVideoHeading) => update({ methodVideoHeading })}
           />
         </div>
       </Card>

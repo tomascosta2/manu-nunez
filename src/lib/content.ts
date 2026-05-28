@@ -123,12 +123,12 @@ export type ThankyouPage = {
   check2?: AB;
   check3?: AB;
   cancellationWarning?: AB;
-  videoSectionHeading?: AB;
+  methodVideoEmbedUrl?: AB;
+  methodVideoHeading?: AB;
   faqHeading?: AB;
   scarcityMessage?: AB;
   loomEmbedUrl?: AB;
   loomSectionHeading?: AB;
-  introVideoUrl?: AB;
 };
 
 export type SectionEyebrows = {
@@ -363,17 +363,17 @@ export const DEFAULT_CONTENT: Content = {
     subtitle: { a: "" },
     whatsappCtaText: { a: "Confirmar mi asistencia por WhatsApp" },
     whatsappPrefilledMessage: { a: "Hola Manu, confirmo mi asistencia a la reunión." },
-    videoEmbedUrl: { a: "https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5" },
+    videoEmbedUrl: { a: "https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=1de861f0-5f8b-45d4-ba82-18bd332f961a" },
+    methodVideoEmbedUrl: { a: "https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=069e112f-6e84-4b51-819b-379c77bc03b5" },
+    methodVideoHeading: { a: "¿Cómo funciona el método?" },
     loomEmbedUrl: { a: "https://www.loom.com/embed/ad79b71777f3410d9cea358340dc7e24" },
     loomSectionHeading: { a: "Mensaje de Manu" },
-    introVideoUrl: { a: "https://player-vz-5c2adb98-6a4.tv.pandavideo.com/embed/?v=1de861f0-5f8b-45d4-ba82-18bd332f961a" },
     urgentBanner: { a: "¡Último paso! Confirmá y agendá para no perder tu cupo." },
     checklistLabel: { a: "Marcá los 3 pasos para confirmar tu lugar:" },
     check1: { a: "Voy a estar en un lugar tranquilo, sin interrupciones." },
     check2: { a: "Realmente quiero cambiar, y me voy a comprometer a hacerlo." },
     check3: { a: "Si no puedo asistir, reprogramo con anticipación para liberar el lugar." },
     cancellationWarning: { a: "En caso de no confirmar, tu llamada va a ser cancelada" },
-    videoSectionHeading: { a: "¿Cómo funciona el método?" },
     faqHeading: { a: "Preguntas frecuentes" },
     scarcityMessage: { a: "Cupos limitados: si no confirmás, el sistema libera tu lugar automáticamente." },
     faqs: [
@@ -542,19 +542,49 @@ async function isPreviewRequest(): Promise<boolean> {
   }
 }
 
+function migrateThankyouContent(content: Content): Content {
+  const tp = content.thankyouPage as Record<string, unknown> | undefined;
+  if (!tp) return content;
+
+  if (tp.methodVideoEmbedUrl !== undefined || tp.methodVideoHeading !== undefined) {
+    return content;
+  }
+
+  const next: Record<string, unknown> = { ...tp };
+  const oldVideoEmbed = tp.videoEmbedUrl;
+  const oldVideoHeading = tp.videoSectionHeading;
+  const oldIntro = tp.introVideoUrl;
+
+  if (oldVideoEmbed !== undefined) {
+    next.methodVideoEmbedUrl = oldVideoEmbed;
+  }
+  if (oldVideoHeading !== undefined) {
+    next.methodVideoHeading = oldVideoHeading;
+    delete next.videoSectionHeading;
+  }
+  if (oldIntro !== undefined) {
+    next.videoEmbedUrl = oldIntro;
+    delete next.introVideoUrl;
+  } else {
+    delete next.videoEmbedUrl;
+  }
+
+  return { ...content, thankyouPage: next as Content["thankyouPage"] };
+}
+
 export async function getContent(): Promise<Content> {
   if (await isPreviewRequest()) {
     noStore();
     const draft =
       (await readBlobJson(DRAFT_BLOB_PATH)) ??
       (await readLocalJson(LOCAL_DRAFT_FILE));
-    if (draft) return draft;
+    if (draft) return migrateThankyouContent(draft);
   }
-  return (
+  const loaded =
     (await readBlobJson(CONTENT_BLOB_PATH)) ??
     (await readLocalJson(LOCAL_CONTENT_FILE)) ??
-    DEFAULT_CONTENT
-  );
+    DEFAULT_CONTENT;
+  return migrateThankyouContent(loaded);
 }
 
 // En Vercel el filesystem es read-only — no podemos caer al fallback local.

@@ -16,9 +16,10 @@ export default async function ThankyouPage() {
   const whatsappCtaText = pickVariant(data.thankyouPage?.whatsappCtaText, variant, isTestActive(t, "thankyouPage.whatsappCtaText")) || "Confirmar mi asistencia por WhatsApp";
   const whatsappPrefilledMessage = pickVariant(data.thankyouPage?.whatsappPrefilledMessage, variant, isTestActive(t, "thankyouPage.whatsappPrefilledMessage")) || "";
   const videoEmbedUrl = pickVariant(data.thankyouPage?.videoEmbedUrl, variant, isTestActive(t, "thankyouPage.videoEmbedUrl")) || "";
+  const methodVideoEmbedUrl = pickVariant(data.thankyouPage?.methodVideoEmbedUrl, variant, isTestActive(t, "thankyouPage.methodVideoEmbedUrl")) || "";
+  const methodVideoHeading = pickVariant(data.thankyouPage?.methodVideoHeading, variant, isTestActive(t, "thankyouPage.methodVideoHeading")) || "";
   const loomEmbedUrl = pickVariant(data.thankyouPage?.loomEmbedUrl, variant, isTestActive(t, "thankyouPage.loomEmbedUrl")) || "";
   const loomSectionHeading = pickVariant(data.thankyouPage?.loomSectionHeading, variant, isTestActive(t, "thankyouPage.loomSectionHeading")) || "";
-  const introVideoUrl = pickVariant(data.thankyouPage?.introVideoUrl, variant, isTestActive(t, "thankyouPage.introVideoUrl")) || "";
   const whatsappNumber = data.siteConfig?.whatsappNumber || "5492216720769";
 
   const faqs = (data.thankyouPage?.faqs ?? []).map((f) => ({
@@ -33,7 +34,6 @@ export default async function ThankyouPage() {
   const check2 = pickVariant(data.thankyouPage?.check2, variant, isTestActive(t, "thankyouPage.check2")) || "";
   const check3 = pickVariant(data.thankyouPage?.check3, variant, isTestActive(t, "thankyouPage.check3")) || "";
   const cancellationWarning = pickVariant(data.thankyouPage?.cancellationWarning, variant, isTestActive(t, "thankyouPage.cancellationWarning")) || "";
-  const videoSectionHeading = pickVariant(data.thankyouPage?.videoSectionHeading, variant, isTestActive(t, "thankyouPage.videoSectionHeading")) || "";
   const faqHeading = pickVariant(data.thankyouPage?.faqHeading, variant, isTestActive(t, "thankyouPage.faqHeading")) || "";
   const scarcityMessage = pickVariant(data.thankyouPage?.scarcityMessage, variant, isTestActive(t, "thankyouPage.scarcityMessage")) || "";
 
@@ -50,9 +50,10 @@ export default async function ThankyouPage() {
       whatsappCtaText={whatsappCtaText}
       whatsappPrefilledMessage={whatsappPrefilledMessage}
       videoEmbedUrl={videoEmbedUrl}
+      methodVideoEmbedUrl={methodVideoEmbedUrl}
+      methodVideoHeading={methodVideoHeading}
       loomEmbedUrl={loomEmbedUrl}
       loomSectionHeading={loomSectionHeading}
-      introVideoUrl={introVideoUrl}
       whatsappNumber={whatsappNumber}
       faqs={faqs}
       urgentBanner={urgentBanner}
@@ -61,7 +62,6 @@ export default async function ThankyouPage() {
       check2={check2}
       check3={check3}
       cancellationWarning={cancellationWarning}
-      videoSectionHeading={videoSectionHeading}
       faqHeading={faqHeading}
       scarcityMessage={scarcityMessage}
       galleryItems={galleryItems}

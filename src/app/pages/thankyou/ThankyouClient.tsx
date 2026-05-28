@@ -12,9 +12,10 @@ type Props = {
   whatsappCtaText: string;
   whatsappPrefilledMessage: string;
   videoEmbedUrl?: string;
+  methodVideoEmbedUrl?: string;
+  methodVideoHeading?: string;
   loomEmbedUrl?: string;
   loomSectionHeading?: string;
-  introVideoUrl?: string;
   whatsappNumber: string;
   faqs?: FAQItem[];
   urgentBanner?: string;
@@ -23,7 +24,6 @@ type Props = {
   check2?: string;
   check3?: string;
   cancellationWarning?: string;
-  videoSectionHeading?: string;
   faqHeading?: string;
   scarcityMessage?: string;
   galleryItems?: GalleryItem[];
@@ -35,9 +35,10 @@ export default function ThankyouClient({
   whatsappCtaText,
   whatsappPrefilledMessage,
   videoEmbedUrl,
+  methodVideoEmbedUrl,
+  methodVideoHeading = "",
   loomEmbedUrl,
   loomSectionHeading,
-  introVideoUrl,
   whatsappNumber,
   faqs = [],
   urgentBanner = "",
@@ -46,7 +47,6 @@ export default function ThankyouClient({
   check2 = "",
   check3 = "",
   cancellationWarning = "",
-  videoSectionHeading = "",
   faqHeading = "",
   scarcityMessage = "",
   galleryItems = [],
@@ -133,9 +133,9 @@ export default function ThankyouClient({
         {title && <h1 className="text-center text-black text-[28px] font-bold mb-4">{title}</h1>}
         {subtitle && <p className="text-center text-black/70 mb-4">{subtitle}</p>}
 
-        {introVideoUrl && (
+        {videoEmbedUrl && (
           <iframe className="w-full aspect-video my-4"
-            src={introVideoUrl}
+            src={videoEmbedUrl}
             allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
           />
         )}
@@ -186,16 +186,16 @@ export default function ThankyouClient({
           <p className="text-red-500 text-[14px] text-center mt-2">{cancellationWarning}</p>
         )}
 
-        {videoEmbedUrl && (
+        {methodVideoEmbedUrl && (
           <>
-            {videoSectionHeading && (
+            {methodVideoHeading && (
               <h3 className="text-center text-black text-[24px] leading-[115%] font-bold mb-6 mt-10">
-                {videoSectionHeading}
+                {methodVideoHeading}
               </h3>
             )}
             <iframe
               className="w-full aspect-video"
-              src={videoEmbedUrl}
+              src={methodVideoEmbedUrl}
               allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
             />
           </>
