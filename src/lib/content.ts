@@ -480,15 +480,16 @@ export const DEFAULT_CONTENT: Content = {
   },
 };
 
-const hasBlobToken = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+// Blob disponible si hay store conectado por OIDC (BLOB_STORE_ID + token OIDC
+// inyectado en runtime) o un token estático legacy. El SDK resuelve la auth solo.
+const blobEnabled = () => Boolean(process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN);
 
 async function readBlobJson(prefix: string): Promise<Content | null> {
-  if (!hasBlobToken()) return null;
+  if (!blobEnabled()) return null;
   try {
     const { blobs } = await list({
       prefix,
       limit: 1,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
     const blob = blobs[0];
     if (!blob) return null;
@@ -511,14 +512,13 @@ async function readLocalJson(file: string): Promise<Content | null> {
 }
 
 async function writeBlobJson(prefix: string, content: Content): Promise<boolean> {
-  if (!hasBlobToken()) return false;
+  if (!blobEnabled()) return false;
   try {
     await put(prefix, JSON.stringify(content, null, 2), {
       contentType: "application/json",
       access: "public",
       addRandomSuffix: false,
       allowOverwrite: true,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
     return true;
   } catch (err) {
@@ -596,7 +596,7 @@ function isServerlessProd(): boolean {
 export async function saveContent(content: Content): Promise<void> {
   if (await writeBlobJson(CONTENT_BLOB_PATH, content)) return;
   if (isServerlessProd()) {
-    throw new Error("BLOB_READ_WRITE_TOKEN no configurado en producción — seteá la env var en Vercel para poder guardar el contenido.");
+    throw new Error("Blob no disponible en producción — conectá un Blob store al proyecto en Vercel (BLOB_STORE_ID por OIDC, o BLOB_READ_WRITE_TOKEN) para poder guardar el contenido.");
   }
   await writeLocalJson(LOCAL_CONTENT_FILE, content);
 }
@@ -604,7 +604,7 @@ export async function saveContent(content: Content): Promise<void> {
 export async function saveDraftContent(content: Content): Promise<void> {
   if (await writeBlobJson(DRAFT_BLOB_PATH, content)) return;
   if (isServerlessProd()) {
-    throw new Error("BLOB_READ_WRITE_TOKEN no configurado en producción — seteá la env var en Vercel para poder guardar el draft.");
+    throw new Error("Blob no disponible en producción — conectá un Blob store al proyecto en Vercel (BLOB_STORE_ID por OIDC, o BLOB_READ_WRITE_TOKEN) para poder guardar el draft.");
   }
   await writeLocalJson(LOCAL_DRAFT_FILE, content);
 }

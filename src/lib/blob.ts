@@ -4,17 +4,17 @@ import path from "node:path";
 
 const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 
-const hasBlobToken = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+// Blob disponible por OIDC (BLOB_STORE_ID) o token estático legacy; el SDK resuelve la auth.
+const blobEnabled = () => Boolean(process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN);
 
 export async function uploadImage(file: File): Promise<string> {
   const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
   const filename = `${crypto.randomUUID()}.${ext}`;
 
-  if (hasBlobToken()) {
+  if (blobEnabled()) {
     const blob = await put(`images/${filename}`, file, {
       access: "public",
       contentType: file.type,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
     return blob.url;
   }
@@ -27,9 +27,9 @@ export async function uploadImage(file: File): Promise<string> {
 }
 
 export async function deleteImage(url: string): Promise<void> {
-  if (hasBlobToken() && url.startsWith("https://")) {
+  if (blobEnabled() && url.startsWith("https://")) {
     try {
-      await del(url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+      await del(url);
     } catch (e) {
       console.error("[blob] delete failed", e);
     }
