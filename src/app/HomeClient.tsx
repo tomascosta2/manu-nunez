@@ -24,6 +24,7 @@ type FormLabelsData = {
   backButton?: AB; nextButton?: AB; loadingButton?: AB; submitButton?: AB;
 } | null;
 type ResultGalleryItem = { _id: string; weight?: string; imageUrl?: string; beforeImageUrl?: string; afterImageUrl?: string };
+type VideoTestimonial = { _id: string; videoUrl?: string; titulo?: string; story?: string; nombre?: string; dato?: string };
 
 export type HomeData = {
   siteConfig?: SiteConfig;
@@ -31,6 +32,7 @@ export type HomeData = {
   homeSections?: HomeSections;
   footer?: Footer;
   resultGallery?: ResultGalleryItem[];
+  videoTestimonials?: VideoTestimonial[];
   calendlyPage?: CalendlyPageData;
   formLabels?: FormLabelsData;
   formQuestions?: unknown[];
@@ -62,6 +64,7 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
   const heroCta = pickVariant(data.hero?.ctaText, variant, isTestActive(activeTestId, "hero.ctaText")) || "Agendar";
   const heroGuarantee = pickVariant(data.hero?.guaranteeText, variant, isTestActive(activeTestId, "hero.guaranteeText")) || "";
   const testimonialsHeadline = pickVariant(data.homeSections?.testimonialsHeadline, variant, isTestActive(activeTestId, "homeSections.testimonialsHeadline")) || "";
+  const resultsHeadline = pickVariant(data.homeSections?.resultsHeadline, variant, isTestActive(activeTestId, "homeSections.resultsHeadline")) || testimonialsHeadline;
   const resultsSubheading = pickVariant(data.homeSections?.resultsSubheading, variant, isTestActive(activeTestId, "homeSections.resultsSubheading")) || "";
   const resultsOverlayLabel = pickVariant(data.homeSections?.resultsOverlayLabel, variant, isTestActive(activeTestId, "homeSections.resultsOverlayLabel")) || "";
   const resultsCalloutText = pickVariant(data.homeSections?.resultsCalloutText, variant, isTestActive(activeTestId, "homeSections.resultsCalloutText")) || "";
@@ -92,6 +95,8 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
     loadingButton: pickVariant(fl?.loadingButton, variant, isTestActive(activeTestId, "formLabels.loadingButton")) || undefined,
     submitButton: pickVariant(fl?.submitButton, variant, isTestActive(activeTestId, "formLabels.submitButton")) || undefined,
   };
+
+  const VIDEO_TESTIMONIALS = (data.videoTestimonials ?? []).filter((t) => t.videoUrl);
 
   const TESTIMONIALS = (data.resultGallery ?? []).map((r) => {
     const before = r.beforeImageUrl || "";
@@ -235,6 +240,59 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
             <div className="bg-[var(--primary)]/80 size-[600px] rounded-full right-[-400px] absolute -z-50 blur-[200px] -bottom-[300px]"></div>
           </section>
 
+          {VIDEO_TESTIMONIALS.length > 0 && (
+            <section className="w-full bg-[#000] relative pt-[80px] md:pt-[120px] pb-[20px] md:pb-[40px]">
+              <div className="cf-container relative">
+                <div className="mx-auto w-full max-w-[960px]">
+                  {testimonialsHeadline && (
+                    <h2 className="text-[32px] md:text-[50px] max-w-[760px] mx-auto text-center font-bold text-white leading-[130%]">
+                      {testimonialsHeadline}
+                    </h2>
+                  )}
+
+                  <div className="mt-12 md:mt-16 space-y-6">
+                    {VIDEO_TESTIMONIALS.map((t) => (
+                      <div
+                        key={t._id}
+                        className="rounded-[18px] bg-linear-150 from-[var(--primary)]/20 via-[var(--primary)] to-[var(--primary)]/20 p-1 overflow-clip"
+                      >
+                        <div className="rounded-[14px] bg-[#0c0c0c] p-5 md:p-8 flex flex-col md:flex-row items-center gap-5 md:gap-8">
+                          <div className="w-full md:w-[400px] md:shrink-0 rounded-[12px] overflow-clip bg-black">
+                            <iframe
+                              className="w-full aspect-video"
+                              src={t.videoUrl}
+                              title={t.titulo || "Testimonio"}
+                              allow="autoplay; fullscreen"
+                              allowFullScreen
+                            ></iframe>
+                          </div>
+                          <div className="flex flex-col text-center md:text-left">
+                            {t.titulo && (
+                              <h3 className="text-[20px] md:text-[24px] font-bold text-white leading-[1.2]">
+                                “{t.titulo}”
+                              </h3>
+                            )}
+                            {t.story && (
+                              <p className="text-white/60 mt-3 leading-[1.7] text-[15px]">
+                                {t.story}
+                              </p>
+                            )}
+                            {(t.nombre || t.dato) && (
+                              <div className="mt-5 pt-4 border-t border-white/10">
+                                {t.nombre && <p className="font-semibold text-white text-[15px]">{t.nombre}</p>}
+                                {t.dato && <p className="text-white/50 mt-1 text-[13px]">{t.dato}</p>}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
           {TESTIMONIALS.length > 0 && (
             <section className="w-full bg-[#000] relative pt-[80px] md:pt-[160px] pb-[60px] md:pb-[90px]">
               <div className="h-[2px] top-0 absolute overflow-clip w-full z-50 hidden md:block">
@@ -245,9 +303,9 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
 
               <div className="cf-container relative">
                 <div className="mx-auto w-full max-w-[1200px] text-center">
-                  {testimonialsHeadline && (
+                  {resultsHeadline && (
                     <h2 className="text-[32px] md:text-[50px] max-w-[760px] mx-auto font-bold text-white leading-[130%]">
-                      {testimonialsHeadline}
+                      {resultsHeadline}
                     </h2>
                   )}
                   {resultsSubheading && (
