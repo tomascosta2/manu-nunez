@@ -96,6 +96,26 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
     submitButton: pickVariant(fl?.submitButton, variant, isTestActive(activeTestId, "formLabels.submitButton")) || undefined,
   };
 
+  // Preguntas del formulario resueltas (A/B elegido) desde el contenido editable.
+  type RawQuestion = {
+    _id: string; type: string; id: string;
+    title?: AB; subtitle?: AB; placeholder?: string; required?: boolean;
+    options?: { _id: string; value: string; label?: AB; qualifies?: boolean }[];
+  };
+  const resolvedQuestions = ((data.formQuestions as RawQuestion[] | undefined) ?? []).map((q) => ({
+    type: q.type,
+    id: q.id,
+    title: pickVariant(q.title, variant, isTestActive(activeTestId, `formQuestions.${q.id}.title`)) || "",
+    subtitle: pickVariant(q.subtitle, variant, isTestActive(activeTestId, `formQuestions.${q.id}.subtitle`)) || undefined,
+    placeholder: q.placeholder,
+    required: q.required,
+    options: q.options?.map((o) => ({
+      value: o.value,
+      label: pickVariant(o.label, variant, isTestActive(activeTestId, `formQuestions.${q.id}.options.${o.value}`)) || "",
+      qualifies: o.qualifies,
+    })),
+  }));
+
   const VIDEO_TESTIMONIALS = (data.videoTestimonials ?? []).filter((t) => t.videoUrl);
 
   const TESTIMONIALS = (data.resultGallery ?? []).map((r) => {
@@ -155,7 +175,7 @@ export default function HomeClient({ data, variant }: { data: HomeData; variant:
           {isFormOpened && (
             <CalificationFormDirect
               variant={variant}
-              questions={data.formQuestions as any}
+              questions={resolvedQuestions}
               labels={formLabels}
               onClose={() => setIsFormOpened(false)}
               onContactReady={(name, email, phone) => setCalendlyPrefill({ name, email, phone })}

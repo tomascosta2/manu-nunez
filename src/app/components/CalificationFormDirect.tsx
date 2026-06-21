@@ -29,7 +29,18 @@ type Props = {
   questions?: unknown[];
   labels?: FormLabelsResolved;
 };
-type Opcion = { value: string; label: string };
+type Opcion = { value: string; label: string; qualifies?: boolean };
+
+// Pregunta resuelta (A/B ya elegido) que viene del editor de contenido.
+type ResolvedQuestion = {
+  type: string;
+  id: string;
+  title: string;
+  subtitle?: string;
+  placeholder?: string;
+  required?: boolean;
+  options?: { value: string; label: string; qualifies?: boolean }[];
+};
 
 type FormValues = {
   name: string;
@@ -51,7 +62,7 @@ type FormValues = {
 // IDs válidos de preguntas de opción única
 type SingleId = Extract<
   keyof FormValues,
-  'presupuesto' | 'cuerpo' | 'urgencia' | 'ocupacion' | 'compromiso90'
+  'presupuesto' | 'cuerpo' | 'urgencia' | 'ocupacion' | 'compromiso90' | 'edad'
 >;
 
 type MultiId = 'freno' | 'intentos';
@@ -162,7 +173,7 @@ const ensureFbcFromFbclid = () => {
   } catch {}
 };
 
-export default function CalificationFormDirect({ variant, onClose, onContactReady, onCalendly, labels = {} }: Props) {
+export default function CalificationFormDirect({ variant, onClose, onContactReady, onCalendly, questions, labels = {} }: Props) {
   const L = {
     nameLabel: labels.nameLabel ?? "Nombre",
     namePlaceholder: labels.namePlaceholder ?? "Tu Nombre Completo",
@@ -226,8 +237,39 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
     });
   };
 
-  const steps = useMemo<(ContactStep | SingleStep | MultiStep | TextStep)[]>(
-    () => [
+  const steps = useMemo<(ContactStep | SingleStep | MultiStep | TextStep)[]>(() => {
+    // Content-driven: si el contenido trae formQuestions (editadas desde el
+    // admin), el formulario se construye desde ahí. Así lo que edita el cliente
+    // SE VE en la web.
+    const qs = (questions as ResolvedQuestion[] | undefined) ?? [];
+    if (qs.length > 0) {
+      return qs.map((q): ContactStep | SingleStep | MultiStep | TextStep => {
+        if (q.type === 'contact') {
+          return { type: 'contact', id: 'contact', title: q.title, subtitle: q.subtitle };
+        }
+        if (q.type === 'text') {
+          return {
+            type: 'text',
+            id: q.id as 'objetivo' | 'edad',
+            title: q.title,
+            subtitle: q.subtitle,
+            placeholder: q.placeholder,
+            required: q.required,
+            inputType: q.id === 'edad' ? 'number' : 'textarea',
+          };
+        }
+        return {
+          type: 'single',
+          id: q.id as SingleId,
+          title: q.title,
+          subtitle: q.subtitle,
+          required: q.required,
+          options: (q.options ?? []).map((o) => ({ value: o.value, label: o.label, qualifies: o.qualifies })),
+        };
+      });
+    }
+    // Fallback: preguntas hardcodeadas si el contenido todavía no trae formQuestions.
+    return [
       {
         type: 'contact',
         id: 'contact',
@@ -301,9 +343,8 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
           { value: 'presupuesto-alto', label: 'Entre 850 y 1.200 USD' },
         ],
       },
-    ],
-    [variant]
-  );
+    ];
+  }, [variant, questions]);
 
   const [stepIndex, setStepIndex] = useState(0);
   const totalSteps = steps.length;
@@ -421,13 +462,15 @@ export default function CalificationFormDirect({ variant, onClose, onContactRead
 
       const normalizedPhone = `${data.codigoPais}${data.telefono}`.replace(/[\s\-().]/g, '');
 
-      const isQualified =
-        (data.presupuesto === 'presupuesto-intermedio' ||
-          data.presupuesto === 'presupuesto-alto' ||
-          data.presupuesto === 'presupuesto-muy-alto') &&
-        parseInt(data.edad) >= 28 &&
-        data.compromiso90 === 'si' &&
-        (data.urgencia === 'urgencia-media' || data.urgencia === 'urgencia-alta' || data.urgencia === 'urgencia-muy-alta');
+      // Calificación configurable desde el editor del admin: el lead califica si
+      // NINGUNA opción que eligió está marcada como "no califica" (qualifies === false).
+      const singleSteps = steps.filter((s): s is SingleStep => s.type === 'single');
+      const isQualified = singleSteps.every((s) => {
+        const chosen = (data as Record<string, string>)[s.id];
+        if (!chosen) return true;
+        const opt = s.options.find((o) => o.value === chosen);
+        return opt?.qualifies !== false;
+      });
 
       localStorage.setItem('isQualified', isQualified ? 'true' : 'false');
       localStorage.setItem('name', data.name);

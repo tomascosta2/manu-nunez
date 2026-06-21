@@ -140,6 +140,7 @@ export type FormOption = {
   _id: string;
   value: string;       // estable, usado en lógica de calificación
   label?: AB;          // editable
+  qualifies?: boolean; // si elegir esta opción califica al lead (default true)
 };
 
 export type FormQuestion = {
@@ -572,19 +573,51 @@ function migrateThankyouContent(content: Content): Content {
   return { ...content, thankyouPage: next as Content["thankyouPage"] };
 }
 
+// Rellena el flag `qualifies` de las opciones que todavía no lo tienen, según
+// los valores que hoy descalifican (preserva el comportamiento previo a que la
+// calificación fuera editable). NO pisa lo que el admin ya configuró.
+const DEFAULT_DISQUALIFYING_VALUES = new Set([
+  "presupuesto-bajo", // no está dispuesto a invertir
+  "3",                 // urgencia más baja
+  "no",                // no se compromete 90 días
+  "menor",             // menor de edad
+  "joven",             // 18-24 (antes calificaba 24+)
+]);
+
+function migrateFormQualification(content: Content): Content {
+  if (!content.formQuestions) return content;
+  let changed = false;
+  const formQuestions = content.formQuestions.map((q) => {
+    if (q.type !== "single" || !q.options) return q;
+    const options = q.options.map((o) => {
+      if (o.qualifies === undefined) {
+        changed = true;
+        return { ...o, qualifies: !DEFAULT_DISQUALIFYING_VALUES.has(o.value) };
+      }
+      return o;
+    });
+    return { ...q, options };
+  });
+  return changed ? { ...content, formQuestions } : content;
+}
+
+function migrate(content: Content): Content {
+  return migrateFormQualification(migrateThankyouContent(content));
+}
+
 export async function getContent(): Promise<Content> {
   if (await isPreviewRequest()) {
     noStore();
     const draft =
       (await readBlobJson(DRAFT_BLOB_PATH)) ??
       (await readLocalJson(LOCAL_DRAFT_FILE));
-    if (draft) return migrateThankyouContent(draft);
+    if (draft) return migrate(draft);
   }
   const loaded =
     (await readBlobJson(CONTENT_BLOB_PATH)) ??
     (await readLocalJson(LOCAL_CONTENT_FILE)) ??
     DEFAULT_CONTENT;
-  return migrateThankyouContent(loaded);
+  return migrate(loaded);
 }
 
 // En Vercel el filesystem es read-only — no podemos caer al fallback local.

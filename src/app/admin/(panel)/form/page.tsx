@@ -58,7 +58,7 @@ export default function FormPage() {
     <div className="space-y-6">
       <PageHeader
         title="Preguntas del formulario"
-        description="Editás títulos, subtítulos, labels y podés agregar o quitar opciones. Cambiar el value de una opción existente rompe la lógica de calificación — solo cambialo si sabés lo que hacés."
+        description="Editás títulos, subtítulos, labels y opciones, y marcás con el check qué opciones CALIFICAN al lead. Un lead califica si ninguna de las opciones que eligió está destildada. Cambiar el value técnico de una opción solo si sabés lo que hacés."
       />
 
       <div className="space-y-5">
@@ -115,6 +115,15 @@ export default function FormPage() {
                           value={opt.label}
                           onChange={(label) => updateOption(qi, oi, { label })}
                         />
+                        <label className="flex items-center gap-2 text-[13px] text-neutral-700 cursor-pointer select-none pt-1">
+                          <input
+                            type="checkbox"
+                            className="h-4 w-4"
+                            checked={opt.qualifies !== false}
+                            onChange={(e) => updateOption(qi, oi, { qualifies: e.target.checked })}
+                          />
+                          <span>Elegir esta opción <strong>califica</strong> al lead</span>
+                        </label>
                       </div>
                     );
                   })}
