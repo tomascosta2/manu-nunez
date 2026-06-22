@@ -501,6 +501,11 @@ async function readBlobJson(prefix: string): Promise<Content | null> {
       if (!r.ok) throw new Error(`fetch blob ${r.status}`);
       return (await r.json()) as Content;
     } catch (e) {
+      // No interferir con las señales internas de Next (dynamic usage, redirect,
+      // notFound): tienen `digest` y deben propagarse tal cual.
+      if (e && typeof e === "object" && typeof (e as { digest?: unknown }).digest === "string") {
+        throw e;
+      }
       lastErr = e;
       if (attempt < 2) await new Promise((res) => setTimeout(res, 150 * (attempt + 1)));
     }
@@ -509,9 +514,11 @@ async function readBlobJson(prefix: string): Promise<Content | null> {
   throw lastErr instanceof Error ? lastErr : new Error("blob read failed");
 }
 
-// Último contenido leído OK (por instancia serverless). Si el Blob falla
-// transitoriamente, servimos esto en vez de revertir a los defaults.
-let lastGoodContent: Content | null = null;
+// Cache en memoria del contenido publicado (por instancia serverless). Evita
+// leer el Blob en cada request y, si el Blob falla transitoriamente, sigue
+// sirviendo el último contenido bueno en vez de revertir a los defaults.
+let publishedCache: { content: Content; at: number } | null = null;
+const CONTENT_TTL_MS = 60_000;
 
 async function readLocalJson(file: string): Promise<Content | null> {
   try {
@@ -628,17 +635,22 @@ export async function getContent(): Promise<Content> {
     }
   }
 
+  // Servir desde cache si está fresca (evita leer el Blob en cada request).
+  if (publishedCache && Date.now() - publishedCache.at < CONTENT_TTL_MS) {
+    return migrate(publishedCache.content);
+  }
+
   try {
     const blob = await readBlobJson(CONTENT_BLOB_PATH);
     if (blob) {
-      lastGoodContent = blob;
+      publishedCache = { content: blob, at: Date.now() };
       return migrate(blob);
     }
   } catch (e) {
-    // Error transitorio leyendo el Blob: servimos el último contenido bueno en
-    // vez de los defaults, para que NO se "revierta" el video/testimonios.
-    if (lastGoodContent) return migrate(lastGoodContent);
-    console.error("[content] Blob falló y no hay lastGood; uso fallback local/defaults:", e);
+    // Error transitorio leyendo el Blob: servimos el último contenido bueno
+    // cacheado en vez de los defaults, para que NO se "revierta" el contenido.
+    if (publishedCache) return migrate(publishedCache.content);
+    console.error("[content] Blob falló y no hay cache; uso fallback local/defaults:", e);
   }
 
   const loaded =
