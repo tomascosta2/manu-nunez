@@ -485,23 +485,33 @@ export const DEFAULT_CONTENT: Content = {
 // inyectado en runtime) o un token estático legacy. El SDK resuelve la auth solo.
 const blobEnabled = () => Boolean(process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN);
 
+// Lee el JSON del Blob con reintentos. Devuelve null SOLO si el blob no existe
+// todavía (setup inicial legítimo). Ante un error transitorio (red, CDN, rate
+// limit) LANZA, para que getContent NO caiga a los defaults y pueda servir el
+// último contenido bueno cacheado.
 async function readBlobJson(prefix: string): Promise<Content | null> {
   if (!blobEnabled()) return null;
-  try {
-    const { blobs } = await list({
-      prefix,
-      limit: 1,
-    });
-    const blob = blobs[0];
-    if (!blob) return null;
-    const r = await fetch(blob.url, { cache: "no-store" });
-    if (!r.ok) return null;
-    return (await r.json()) as Content;
-  } catch (e) {
-    console.error("[content] Blob read failed:", prefix, e);
-    return null;
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const { blobs } = await list({ prefix, limit: 1 });
+      const blob = blobs[0];
+      if (!blob) return null; // no existe aún (legítimo)
+      const r = await fetch(blob.url, { cache: "no-store" });
+      if (!r.ok) throw new Error(`fetch blob ${r.status}`);
+      return (await r.json()) as Content;
+    } catch (e) {
+      lastErr = e;
+      if (attempt < 2) await new Promise((res) => setTimeout(res, 150 * (attempt + 1)));
+    }
   }
+  console.error("[content] Blob read falló tras reintentos:", prefix, lastErr);
+  throw lastErr instanceof Error ? lastErr : new Error("blob read failed");
 }
+
+// Último contenido leído OK (por instancia serverless). Si el Blob falla
+// transitoriamente, servimos esto en vez de revertir a los defaults.
+let lastGoodContent: Content | null = null;
 
 async function readLocalJson(file: string): Promise<Content | null> {
   try {
@@ -608,13 +618,30 @@ function migrate(content: Content): Content {
 export async function getContent(): Promise<Content> {
   if (await isPreviewRequest()) {
     noStore();
-    const draft =
-      (await readBlobJson(DRAFT_BLOB_PATH)) ??
-      (await readLocalJson(LOCAL_DRAFT_FILE));
-    if (draft) return migrate(draft);
+    try {
+      const draft =
+        (await readBlobJson(DRAFT_BLOB_PATH)) ??
+        (await readLocalJson(LOCAL_DRAFT_FILE));
+      if (draft) return migrate(draft);
+    } catch {
+      // si falla el draft, seguimos al contenido publicado
+    }
   }
+
+  try {
+    const blob = await readBlobJson(CONTENT_BLOB_PATH);
+    if (blob) {
+      lastGoodContent = blob;
+      return migrate(blob);
+    }
+  } catch (e) {
+    // Error transitorio leyendo el Blob: servimos el último contenido bueno en
+    // vez de los defaults, para que NO se "revierta" el video/testimonios.
+    if (lastGoodContent) return migrate(lastGoodContent);
+    console.error("[content] Blob falló y no hay lastGood; uso fallback local/defaults:", e);
+  }
+
   const loaded =
-    (await readBlobJson(CONTENT_BLOB_PATH)) ??
     (await readLocalJson(LOCAL_CONTENT_FILE)) ??
     DEFAULT_CONTENT;
   return migrate(loaded);
